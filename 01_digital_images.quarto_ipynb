@@ -1,0 +1,1584 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Digital Images\n",
+        "\n",
+        "This notebook provides an introduction to the methods presented in the book\n",
+        "*Distant Viewing: Computational Exploration of Digital Images*\n",
+        "(MIT Press, 2023). We replicate and extend portions of the analysis\n",
+        "using a collection of 5000 movie posters presented in the the third chapter of\n",
+        "the book. We do not assume any prior knowledge of Python or computer vision in\n",
+        "these notes. While a complete introduction to Python is not in the scope of our\n",
+        "introduction, we do our best to highlight the main features of the language\n",
+        "as they apply to the application here. Here are the specific learning outcomes\n",
+        "for the tutorial:\n",
+        "\n",
+        "1. Explain how digital images are stored as pixel arrays.\n",
+        "2. Connect the structure of digital images with computational methods through\n",
+        "the distant viewing framework.\n",
+        "3. Apply pre-constructed Python code to study a collection of digital images.\n",
+        "4. Explain measurements such as hue, saturation, chroma, and value using\n",
+        "color theory.\n",
+        "5. Compare movie poster composition through time and across genres.\n",
+        "6. Produce annotations with state-of-the-art computer vision algorithms to\n",
+        "detect faces using the distant viewing toolkit.\n",
+        "\n",
+        "For further information about the distant viewing toolkit (**dvt**), the\n",
+        "open-source Python package that we have developed, please see the\n",
+        "[project's homepage](https://github.com/distant-viewing/dvt).\n",
+        "More information about the theory of distant viewing and the specific\n",
+        "application to movie image posters can be the found in our book, which is\n",
+        "available to download for free under an open access license on our\n",
+        "[website](https://www.distantviewing.org/book/) along with additional data and\n",
+        "code to replicate the other studies shown in the text. A second notebook\n",
+        "following up on the methods here using moving images can be found\n",
+        "[here](https://colab.research.google.com/drive/1qQKQw8qHsTG7mK7Rz-z8nBfl98QBMWGf?usp=sharing).\n",
+        "\n",
+        "## Setup\n"
+      ],
+      "id": "d4633d5d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import dvt\n",
+        "import cv2"
+      ],
+      "id": "8df09f3d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "In Google Colab, your working environment resets itself everytime you reopen a\n",
+        "notebook. Therefore, all of the steps above need to be re-run each time that\n",
+        "you start the notebook. If you were running this code on your own machine, the\n",
+        "installation of the **dvt** package and downloading the data would only need to\n",
+        "be done once. Loading the modules in the final code chunk, however, always needs\n",
+        "to be run each time that Python is restarted.\n",
+        "\n",
+        "## Movie Poster Dataset\n",
+        "\n",
+        "Before we jump into the analysis of the movie posters images, it is important\n",
+        "to take a moment to look at the metadata that we have attached to each poster\n",
+        "and to understand the structure of the dataset. In the code below, we use the\n",
+        "`read_csv` function from the pandas module (which we have given the short\n",
+        "name **pd** following standard Python conventions) to load the csv file that has\n",
+        "one row for each movie in our dataset. We will save the output of the function\n",
+        "as an object named `posters`. In the final line of the code, we write the object\n",
+        "name all by itself, which causes the first file lines of the dataset to be\n",
+        "printed inside of the notebook for us to look at. The data contains one row for\n",
+        "each of the 100 top grossing films for each year from 1970 through 2019. For a\n",
+        "few movies during the 1970s we were not able to find the movie posters; these\n",
+        "are excluded from the dataset. For each movie, we have the year, the title, the\n",
+        "file name of the associated image of the movie poster, and a description of the\n",
+        "half decade that the movie comes from. The latter will be used in our analysis\n",
+        "of change over time.\n"
+      ],
+      "id": "ff017769"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters = pd.read_csv(\"data/movies_50_years_meta.csv\")\n",
+        "posters"
+      ],
+      "id": "94264e28",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We have another set of metadata that associates each film with one or more genre\n",
+        "categories. The dataset contains one row for each pair of film and genre tag.\n",
+        "The year is included because there are several films that share the\n",
+        "same title, but can be uniquely identified by knowing the title and year of the\n",
+        "film.\n"
+      ],
+      "id": "c2488397"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "genre = pd.read_csv(\"data/movies_50_years_tags.csv\")\n",
+        "genre"
+      ],
+      "id": "6a325b31",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Looking at the first and last few rows, do the genre tags seem reasonable\n",
+        "for the given films? Our analyses in the remainder of the notebook will\n",
+        "focus on movie poster patterns across time periods and genres.\n",
+        "\n",
+        "Now that we have a sense of our data, what kinds of questions might we be\n",
+        "interesed in exploring?\n",
+        "\n",
+        "## Digital Images\n",
+        "\n",
+        "Now that we have seen the metadata for the movie posters, let's look at how\n",
+        "digital images are manipulated in Python by loading in the image from a single\n",
+        "movie poster. All of the movie posters are stored as JPEG files (an abbreviation\n",
+        "for the Joint Photographic Experts Group). This is a common image format that\n",
+        "can be opened and understood by nearly any program or device that works with\n",
+        "images. If you opened a JPEG file on your computer or phone, it would display\n",
+        "the image without any special setup required. Many of the images that you see\n",
+        "on public websites are stored as JPEG files and are processed and displayed\n",
+        "by your browser.\n",
+        "\n",
+        "In the code below, we use the function `dvt.load_image` to load an image into\n",
+        "Python. We save the image as an object named `img`. The path to the poster image\n",
+        "is taken directly from the metadata above. Here, we are using the formula of\n",
+        "taking the name of the dataset (`posters`) followed by a period and the name\n",
+        "of the column (`path`) followed by the row number in square brackets (`[10]`).\n",
+        "We have selected the poster from the John Wayne film *The Legend* because it\n",
+        "has a distinct orange tone that will be interesting to look at. After loading\n",
+        "the image into Python,  we print out the image object in the second line by\n",
+        "including it on it's own final line.\n"
+      ],
+      "id": "d90b8516"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.path[10])\n",
+        "plt.imshow(img)"
+      ],
+      "id": "33fa143c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We see that it's relatively easy to load a common image file format into Python\n",
+        "and then to display it within the notebook. In order to best understand the\n",
+        "computational analyses that follow, it will be helpful to investigate the\n",
+        "the way that digital image is represented inside of Python. We can use the\n",
+        "built-in Python function `type` to see the obect type of any Python object.\n",
+        "Let's do that below:\n"
+      ],
+      "id": "433faba6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "type(img)"
+      ],
+      "id": "efac7ef7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "You may have reasonably assumed that the object would have a name related\n",
+        "to the fact that it contains an image. But, we see that it is cryptically\n",
+        "called a `numpy.ndarray`. What does this mean? This is a generic data type\n",
+        "created by the numpy library (the same one that we loaded above in the setup\n",
+        "section) to store rectangular blocks of numbers.\n",
+        "\n",
+        "To understand how an array of numbers can represent an image, we will print out\n",
+        "the object's shape attribute (an attribute is a characteristic of a Python\n",
+        "object that we can access with the object name followed by a `.` and the\n",
+        "attribute name). This tells us how the numbers in array are arranged.\n"
+      ],
+      "id": "95ef52f7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img.shape"
+      ],
+      "id": "65caf8f9",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We see that the shape of the object has three components. The first number tells\n",
+        "us how many rows of numbers there are and the second tells us how many columns\n",
+        "there are. The third number indicates that there is a third dimension with a\n",
+        "size of three. The easiest way to picture this is to think of having three sets\n",
+        "of rectangular grids of numbers, each with 229 rows and 150 numbers. Think of\n",
+        "an Excel file with three sheets, each having a grid of numbers of the same\n",
+        "size.\n",
+        "\n",
+        "A specific row and column in this grid of numbers represents a *pixel*\n",
+        "(picture + element), the\n",
+        "smallest individal component of an image. We need three different numbers for\n",
+        "each pixel to indicate the amount of red, green, and blue light that is needed\n",
+        "to combine to create the color at each particular location. The Python library\n",
+        "that we are using here represents the quantity of light on a scale from 0 (not\n",
+        "turned on at all) through 255 (as bright as possible). Blending these three\n",
+        "components together can recreate nearly any color observable by the human eye.\n",
+        "\n",
+        "To make this more concrete, let's see an example of the numbers that create the\n",
+        "image above. There are far too many to look at all at once. Instead, we will use\n",
+        "a bracket notation to select the first ten rows, first eight columns, and the\n",
+        "first color component. Python uses a convention that is common in computer\n",
+        "programing that starts counting at zero, so the `0` below grabs from the first\n",
+        "array of numbers, which here correspond to the red color intensity.\n"
+      ],
+      "id": "72dec21f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img[:10, :8, 0]"
+      ],
+      "id": "e8769dc4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The portion of the image that we grabbed above is the far upper left-hand\n",
+        "corner. We see that to represent this corner we need to turn on a lot of red\n",
+        "light (around 200ish out a possible 255). However, if we look at the image\n",
+        "there appear to be no color red anywhere. The upper left-hand corner appears\n",
+        "to be white. To understand how this is the case, let's look at the second\n",
+        "component, which is the amount of green light.\n"
+      ],
+      "id": "ba07f0b4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img[:10, :8, 1]"
+      ],
+      "id": "a4a252de",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "And while we are at it, also the amount of blue light.\n"
+      ],
+      "id": "caecc8f2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img[:10, :8, 2]"
+      ],
+      "id": "877f5c6d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Looking above, we see that the red, green, and blue lights are all turned on\n",
+        "at the same level in the upper left-hand corner of the image. When we blend\n",
+        "light from all three colors together, we get a shade of grey. This is something\n",
+        "closer to black when the colors are all turned low, and something closer to\n",
+        "white when the colors are all turned higher. So now this approximates what we\n",
+        "see in the upper left corner of the image, corresponding to a shade of grey\n",
+        "that is very close to white.\n",
+        "\n",
+        "To solidify our understanding how these components work, let's see another\n",
+        "part of the image corresponding to rows 180-190 and columns 25-30. It's very\n",
+        "small, but by looking closely we should be able to connect it to the image\n",
+        "above. The resulting image is too small for Colab to automatically treat as\n",
+        "an image for display purposes, so we need to use the `plt.imshow` function to\n",
+        "display the pixel values as pixels.\n"
+      ],
+      "id": "0eae7456"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "plt.imshow(img[180:190, 25:30, :])"
+      ],
+      "id": "82852a6a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "This small window of the image is part of the orange at the bottom of the movie\n",
+        "poster. Let's see the red, green, and blue components that make up this color.\n"
+      ],
+      "id": "76c3e6b4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img[180, 25, :]"
+      ],
+      "id": "e28f1ee4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The dark orange color comes from blending a good amount of red light (189/255),\n",
+        "a bit of green (106/255), and no blue (0/255) together. Looking at a color wheel\n",
+        "should help explain why orange comes from mixing a bit of green with a larger\n",
+        "bit of red.\n",
+        "\n",
+        "Different image processing libraries have slightly different conventions for\n",
+        "how to represent digital images. Most use the same ordering of the colors\n",
+        "(red, green, blue), and some use fractions between 0 and 1 rather than integers\n",
+        "between 0 and 255. Certain image formats include a fourth component, called an\n",
+        "alpha channel, to represent image opacity. Other formats contain a single\n",
+        "color channel to represent grayscale images. However, all of these formats\n",
+        "have the same underlying concept of representing digital images through\n",
+        "numbers that indicate pixel intensities. This is a very different way of\n",
+        "thinking about images than the way that humans process visual signals and is\n",
+        "something that we will explore in the next section.  \n",
+        "\n",
+        "Now we know we can look closely at color within the posters, which we can combine\n",
+        "with the metadata. What are additional questions that we can ask about movie\n",
+        "posters?\n",
+        "\n",
+        "## Distant Viewing: Theory\n",
+        "\n",
+        "Computers represent images by understanding them as three-dimensional arrays of\n",
+        "numbers. This is very different from the way that images are interpreted and\n",
+        "used by human viewers. Furthermore, the connection between these two\n",
+        "representations is not at all obvious. There is no way to understand what is\n",
+        "being represented by a small subset of pixel intensities without seeing a large\n",
+        "part of the image as a whole. Even something as simple as the amount of blue\n",
+        "light in a given pixel can be difficult to understand. A lot of blue could be\n",
+        "the color blue, or could just be blended with red and green to make white.\n",
+        "So, in order to do computational analyses with large collections of digital\n",
+        "images, we first need to convert these raw pixel intensities into\n",
+        "representations that match the interpretations of the images that we are\n",
+        "interested in studying.\n",
+        "\n",
+        "The theory behind distant viewing stems from\n",
+        "this exact realization. Namely, that the way digital images are represented\n",
+        "forces us to construct *annotations* that hold structured data that aligns with\n",
+        "our research questions. These annotations, which can be created manually or\n",
+        "using computational algorithms, are both destructive (there is information lost\n",
+        "in the process of creating them) and open to interpretation (there is never a\n",
+        "neutral way of creating annotations; decisions always need to be made about\n",
+        "how they are created).\n",
+        "\n",
+        "We will work towards more complex annotations, but let's start with one of the\n",
+        "most straightforward: image brightness. Pixel intensities tell us how much\n",
+        "to turn on the red, green, and blue lights at each postion of the image to\n",
+        "create a display of a given image. The higher these numbers are, it stands to\n",
+        "reason, the brighter the image will be when shown on a digital display. So,\n",
+        "one way to represent a meaningful annotation about an image is to take the\n",
+        "average value of all pixel intensities. We can do this with the following code,\n",
+        "which uses the numpy function `mean` to compute the average (mean) of all the\n",
+        "values in an array.\n"
+      ],
+      "id": "9633ddd6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "np.mean(img)"
+      ],
+      "id": "7f428136",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Little argument probably needs to be made to convince someone that a lot of\n",
+        "information is lost between this one number and all of the rich information that\n",
+        "is present in the thumbnail image of the movie poster. There is no information\n",
+        "about the content of the text in the image, the dominant orange color, the shape\n",
+        "of the man and the horse, the white border, or the way each of these elements is\n",
+        "arranged in the frame. So, clearly this process of creating annotations is a\n",
+        "destructive one. The difference between the summarized annotation (a single\n",
+        "number) and the information in the original image is known in information\n",
+        "theory as a *semantic gap*. But what about the second part of the theory, that\n",
+        "this measurement is non-netural and represents specific choices about how we\n",
+        "want to *view* at a distance? While this may seem less obvious, there are many\n",
+        "different ways of measuring the brightness of an image. For example, we might\n",
+        "want to consider the median value of the pixel intensities rather than their\n",
+        "average value as in the code below.\n"
+      ],
+      "id": "b61982a7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "np.median(img)"
+      ],
+      "id": "dd735b5e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Alternatively, because the human eye is more sensitive to green than blue or\n",
+        "red light, we might want to weight the brightness more heavily based on the\n",
+        "color of light that is being used. Many movie posters have black or white\n",
+        "borders, which could heavily influence the brightness of the image as a whole.\n",
+        "Perhaps we would want to only take the brightness at the middle part of the\n",
+        "image. And of course, why do we even care about the brightness of the image in\n",
+        "the first place? Once we start thinking about all of these different options,\n",
+        "it should become clear that there is no perfect way to represent any element of\n",
+        "an image as structured data. Choices and tradeoffs are always being made.\n",
+        "Eventually we need to make some of those choices and see what we can learn with\n",
+        "them, while keeping the caveats about the nature of image annotations and the\n",
+        "resulting semantic gaps always in the back of our mind. In other words, when\n",
+        "we are analyzing images through computer vision, we are distant viewing.\n",
+        "\n",
+        "## Annotating Image Brightness\n",
+        "\n",
+        "We have now carefully worked through the way the digital images are stored,\n",
+        "understood the implication for this in terms of the theory of distant viewing,\n",
+        "and shown one particular way of constructing an annotation through image\n",
+        "brightness. Let's now put this together to do an analysis of the movie posters\n",
+        "based on their overall brightness. As a first step, we need to repeat the\n",
+        "process used with the one poster above to all of the images in the dataset.\n",
+        "In order to do this we use a loop in Python. This consists of the keyword `for`,\n",
+        "followed by a block of indented code. Each of the lines of the indented code\n",
+        "will be run once for every value of the iteration variable `ind` from the set\n",
+        "of row numbers in the `posters` dataset. So, we will load the\n",
+        "image of each poster into Python, compute the image brightness, and the save the brightness in\n",
+        "a new column that we created in the dataset. To match the results in the book\n",
+        "as closely as possible, we will divide the brightness by 255 so that the values\n",
+        "range from 0 (completely black) to 1 (completely white).\n"
+      ],
+      "id": "975908c0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters['avg_brightness'] = 0.0\n",
+        "for ind in posters.index:\n",
+        "  img = dvt.load_image(\"data/\" + posters.loc[ind, 'path'])\n",
+        "  posters.loc[ind, 'avg_brightness'] = np.mean(img) / 255"
+      ],
+      "id": "2500b779",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now that we have added the annotation of the image brightness to each of the\n",
+        "rows of the poster data, we can arrange the posters from the brightest to the\n",
+        "darkest using the `sort_values` method.\n"
+      ],
+      "id": "ff2fd601"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters = posters.sort_values('avg_brightness', ascending=False)\n",
+        "posters"
+      ],
+      "id": "2edff4eb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The theory of distant viewing tells us that the creation of annotations, while\n",
+        "a necessary step in computational analysis of images, is both destructive and\n",
+        "subjective. So, before continuing to an aggregative analysis, it is useful to\n",
+        "connect the annotations back to the images by actually looking at some of the\n",
+        "posters. One way to do that is to look at posters with extreme values. In the\n",
+        "code below we load the first image in the sorted dataset, which is the poster\n",
+        "that has been assigned the highest brightness value. Remember that Python\n",
+        "starts counting at zero. The zero in the first line corresponds to the first\n",
+        "row of the data.\n",
+        "\n",
+        "Feel free to look at other particularly bright rows to\n",
+        "get a fuller picture of what is being captured by the annotation.\n"
+      ],
+      "id": "1795a9e6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.iloc[0].path)\n",
+        "plt.imshow(img)"
+      ],
+      "id": "62d4abbf",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "It's similarly useful to look at the darkest images in the dataset. To do that\n",
+        "we modify the code to start at the number of rows in the data minus one (again,\n",
+        "because of Python's convention of starting to count at zero). You can change the\n",
+        "minus 1 to minus n to look at the n'th least bright image in the data.\n"
+      ],
+      "id": "6bc92bd2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.iloc[posters.shape[0] - 1].path)\n",
+        "plt.imshow(img)"
+      ],
+      "id": "a171d4f6",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "After looking at some example posters, how do you feel about the annotation's\n",
+        "ability to capture poster brightness? At least at the extremes, what feature(s)\n",
+        "of the poster seem to best explain/predict the brightness of the image?\n",
+        "\n",
+        "Now that we have some understanding of how the annotation works, and hopefully\n",
+        "some confidence that it corresponds with some meaningful quantity, let's do\n",
+        "some aggregative analysis with the annotations. In the code below we group out\n",
+        "dataset by `period` (half-decades from 1970 through 2019) and look at the mean\n",
+        "average brightness of all posters from that period.\n"
+      ],
+      "id": "a0f6fcdd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters.groupby(['period'])['avg_brightness'].mean()"
+      ],
+      "id": "e6e742a0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "How would you characterize the pattern here? Is there a meaningful pattern?\n",
+        "If so, do you have any hypotheses about what might be behind them?\n",
+        "\n",
+        "Let's do a similar analysis using the genres associated with each film. To do\n",
+        "this, we first use the function `pd.merge` to combine our posters data with\n",
+        "the genres table.\n"
+      ],
+      "id": "375bde89"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df = pd.merge(posters, genre, on=['year', 'title'])\n",
+        "df"
+      ],
+      "id": "3b1af6fe",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Then, we can repeate the analysis from the period data by grouping on genre\n",
+        "and then taking the average brightness of each genre. Whereas it made sense to\n",
+        "arrange the periods in chronological order to see a pattern, here it will be\n",
+        "better to have Python arrange the genres by their mean average brightness. We\n",
+        "do this with the `sort_values` method on the summarized data.\n"
+      ],
+      "id": "97fd08ca"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df.groupby(['genre'])['avg_brightness'].mean().sort_values()"
+      ],
+      "id": "d62b3694",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "What patterns do you notice in the genre codes here? Which seem to have the\n",
+        "darkest posters and which seem to have the brightness ones? Can you summarize\n",
+        "this pattern in any way? Any hypotheses about what is going on here?\n",
+        "\n",
+        "## Saturation and Chroma\n",
+        "\n",
+        "We have already seen that if we do a careful analysis, we can do quite a bit of\n",
+        "work with a relatively straightforward annotation based on image brightness. Our goal\n",
+        "though is to understand the use of color more broadly in movie posters, which\n",
+        "will require creating additional annotations that capture other aspects of\n",
+        "poster color. One way to do this is to first convert the raw pixel intensities\n",
+        "into an alternative color space.\n",
+        "\n",
+        "The RGB representation of pixels by the\n",
+        "amount of red, green, and blue light needed to create the color at a specific\n",
+        "point in space comes from the low-level engineering needs to image capture and\n",
+        "display. As we have already seen, it is not a particularly meaningful way to\n",
+        "think about our perception of color. Fortunately, there are other ways to\n",
+        "represent color that more closely align with human perception and understanding.\n",
+        "In order to understand how this works, let's re-load the poster of the John\n",
+        "Wayne movie *The Legend*.\n"
+      ],
+      "id": "ea1f5dc4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.path[10])\n",
+        "plt.imshow(img)"
+      ],
+      "id": "b0ae634f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Recall that above we located a specific pixel that corresponds to the burnt\n",
+        "orange color in the poster. It has a RGB representation of the following:\n"
+      ],
+      "id": "496a0974"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img[180, 25, :]"
+      ],
+      "id": "9c202006",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We can convert the RGB format into an HSV format using the `cvt2.cvtColor`\n",
+        "function by specifying the type of color space transformation (`COLOR_RGB2HSV`)\n",
+        "to use as a second argument. We will do some conversion of the scales of the\n",
+        "output to convert them into a scale from 0 to 1, which will better match other\n",
+        "sources as well as the longer discussion of this case study in Chapter 3 of\n",
+        "*Distant Viewing*.\n"
+      ],
+      "id": "cd798c9f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)\n",
+        "img_hsv = img_hsv.astype(np.float64)\n",
+        "img_hsv[:, :, 0] = img_hsv[:, :, 0] / 179.0\n",
+        "img_hsv[:, :, 1] = img_hsv[:, :, 1] / 255.0\n",
+        "img_hsv[:, :, 2] = img_hsv[:, :, 2] / 255.0\n",
+        "img_hsv.shape"
+      ],
+      "id": "57d76b58",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Notice that the shape of the output is exactly the same as the original image.\n",
+        "The rows and columns still correspond to the same locations as the RGB model;\n",
+        "it is only the triple of numbers at that location that have changed. Let's see\n",
+        "what our burnt orange pixel looks like now:\n"
+      ],
+      "id": "2cd8ef95"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img_hsv[180, 25, :]"
+      ],
+      "id": "22e832e1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The first component is around `0.095`. This correspond to the **hue** of the\n",
+        "pixel, with this number corresponding to the color orange. Hue is a bit complex\n",
+        "and we will further investigate how it works in the next section. The second\n",
+        "number is the **saturation**, which represents how rich the color is. A light\n",
+        "pastel, such as a pale pink, will have a low saturation. Here, we see that the\n",
+        "saturation is the maximum value of `1`. Finally, the value is an alternative\n",
+        "representation of brightness, which here we see is equal to `0.74`.\n",
+        "\n",
+        "Let's now focus on the saturation of the posters and do a similar analysis to\n",
+        "the ones above with brightness. To more closely follow the analysis\n",
+        "in the book, we will compute the related quantity called **chroma** instead\n",
+        "of working with saturation directly. This can be computed by\n",
+        "multiplying the saturation by the value. We used this quantity because it more\n",
+        "closely aligns with the idea of the richness of color that we wanted to capture.\n",
+        "For example, we see that the burnt orange color in our poster for *The Legend*\n",
+        "has a saturation of `1`, but it's chroma is only `0.74` (saturation times value).\n",
+        "Only a \"pure\" orange color, like what you would see on a color wheel, would have\n",
+        "a chroma of 1.\n",
+        "\n",
+        "Now, let's cycle through the posters and add the average chroma value to each of\n",
+        "them just as we did with the image brightness.\n"
+      ],
+      "id": "6960257a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters['avg_chroma'] = 0.0\n",
+        "for ind in posters.index:\n",
+        "  img = dvt.load_image(\"data/\" + posters.loc[ind, 'path'])\n",
+        "  img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)\n",
+        "  img_hsv = img_hsv.astype(np.float64)\n",
+        "  img_hsv[:, :, 0] = img_hsv[:, :, 0] / 179.0\n",
+        "  img_hsv[:, :, 1] = img_hsv[:, :, 1] / 255.0\n",
+        "  img_hsv[:, :, 2] = img_hsv[:, :, 2] / 255.0\n",
+        "  posters.loc[ind, 'avg_chroma'] = np.mean(img_hsv[:, :, 1] * img_hsv[:, :, 2])"
+      ],
+      "id": "d9ae8ef8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "And again we will arrange the posters data from the most to the least highest\n",
+        "levels of chroma.\n"
+      ],
+      "id": "9879824a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters = posters.sort_values('avg_chroma', ascending=False)\n",
+        "posters"
+      ],
+      "id": "45322606",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now, let's once again look at some of the posters that correspond to\n",
+        "extreme values. It is always an important step when working with new annotations\n",
+        "to go back to the original images, and actually look at them to see how the\n",
+        "numeric representation of the image corresponds to our own viewing\n",
+        "and interpretation. As before, please feel free to experiment\n",
+        "by looking at other posters with particularly high values.\n"
+      ],
+      "id": "10b48969"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.iloc[0].path)\n",
+        "plt.imshow(img)"
+      ],
+      "id": "2c2a1d6b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We can also do this with posters have the lowest average chroma. Many posters\n",
+        "have an average chroma equal to zero. Can you think of what feature these all\n",
+        "share in common before looking at the examples?\n"
+      ],
+      "id": "ea97f3d1"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.iloc[posters.shape[0] - 1].path)\n",
+        "plt.imshow(img)"
+      ],
+      "id": "aee3a2d3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Let's see how the average chroma corresponds to the genres associated with\n",
+        "each of the movie posters. Because there is such a shift in brightness from\n",
+        "first twenty years of the data (a lot was in black and white), we will filter\n",
+        "the data after merging in the genres to only include years from 1990 onwards.\n"
+      ],
+      "id": "3524e110"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df = pd.merge(posters, genre, on=['year', 'title'])\n",
+        "df = df[df[\"year\"] >= 1990]\n",
+        "df.groupby(['genre'])['avg_chroma'].mean().sort_values()"
+      ],
+      "id": "ddb926a8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Take some time to look at the results. What patterns do you notice here? Does\n",
+        "anything seem either (i) particularly surprising or (ii) particularly\n",
+        "unsurprising? Both of these are useful observations for understanding the\n",
+        "connection between the messages conveyed through the poster's color and the\n",
+        "associated genres.\n",
+        "\n",
+        "## Dominant Color\n",
+        "\n",
+        "Having looked at the brightness/value and saturation/chroma of the posters,\n",
+        "we now look to the third element of color, know as **hue**. To get started,\n",
+        "let's take a different example poster. Here, we will load the poster from the\n",
+        "movie *Take the Lead* (2006), which has several different hues of color in it.\n"
+      ],
+      "id": "c670c20d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters.path[4016])\n",
+        "plt.imshow(img)"
+      ],
+      "id": "cf658536",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now, let's compute the HSV coordinates of this image just as we did in the\n",
+        "previous section. Additionally, we will reshape the pixel data so that the\n",
+        "array has one row for each pixel and only three columns. This is just some\n",
+        "re-arranging to make the rest of the code easier to write and understand.\n"
+      ],
+      "id": "5f39405b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)\n",
+        "img_hsv = img_hsv.astype(np.float64)\n",
+        "img_hsv[:, :, 0] = img_hsv[:, :, 0] / 179.0\n",
+        "img_hsv[:, :, 1] = img_hsv[:, :, 1] / 255.0\n",
+        "img_hsv[:, :, 2] = img_hsv[:, :, 2] / 255.0\n",
+        "img_hsv = img_hsv.reshape((-1, 3), order = \"F\")\n",
+        "img_hsv.shape"
+      ],
+      "id": "5749dc7e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The hue is a number between 0 and 1 that indicate what we would colloqually\n",
+        "call \"color\". Unlike brightness, saturation, chroma, and value, these numbers\n",
+        "are best thought of being arranged in a circle (see the associated slides for\n",
+        "a visualization). A value of `0` corresponds with red, `.33` with green, `.5`\n",
+        "with cyan, and `.66` with blue. Values close to 1 wrap back through purple and\n",
+        "link back into red. So, the hues `0.01` and `0.99` are actually quite similar.\n",
+        "\n",
+        "To understand a bit better, let's look at a histogram showing the distribution\n",
+        "of the hues in the image. We need to be careful, though, because our\n",
+        "interpretation of hue is only applicable when the chroma is sufficently large.\n",
+        "If the chroma value is small, there is little color to show anyway and the\n",
+        "differences between hues may be difficult or impossible to differentate. In\n",
+        "the code below, we should the distribution of hues with a chroma above `0.3`.\n"
+      ],
+      "id": "5215c10a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "plt.hist(img_hsv[img_hsv[:,1] * img_hsv[:,2] > 0.3, 0], bins=100)\n",
+        "plt.show()"
+      ],
+      "id": "f7674dfd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "We should see a lot of values near `0.3`; these correspond to the green in the\n",
+        "poster, which takes up a lot of space in the image. The peak near `0.66` is\n",
+        "associated with the blue in the image, mainly on the silhouettes of the two\n",
+        "characters on the poster. The smaller amount near one, and also wrapping around\n",
+        "at 1, is the orange/red color in the title of the movie.\n",
+        "\n",
+        "Taking averages of hues does not in general provide meaningful summaries. For\n",
+        "an extreme example, if we take the average of two shades of red that have hues\n",
+        "of `0.99` and `0.01`, this would yield a hue of `0.5`, cyan, a color directly\n",
+        "between green and blue. Alternatively, we can create an annotation of hue by\n",
+        "breaking the range of hues up into standard color names and then count the\n",
+        "proportion of each poster that corresponds with each color. To do this, we will\n",
+        "load another dataset that we created with common cut-off values for each of the hues.\n"
+      ],
+      "id": "6f641938"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "hue = pd.read_csv(\"data/movies_50_years_hue.csv\")\n",
+        "hue"
+      ],
+      "id": "72696b99",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Next, we take the hues in `img_hsv` and count the numbes of\n",
+        "pixels that are in each of these buckets after filtering for a sufficently\n",
+        "high chroma to have a meaningful hue.\n"
+      ],
+      "id": "ef426e41"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "bins = np.append(0, hue.end.values)\n",
+        "cnt, _ = np.histogram(img_hsv[(img_hsv[:,1] * img_hsv[:,2] > 0.3), 0], bins = bins)\n",
+        "cnt[0] = cnt[0] + cnt[7]\n",
+        "cnt = cnt[:7]\n",
+        "cnt"
+      ],
+      "id": "d2e6186b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "There are a number of different ways to summarize these counts. We will create\n",
+        "two annotations from them. First, we associate each poster with a dominant color\n",
+        "corresponding to the hue name that is most strongly represented in the poster.\n",
+        "This can be done with the following code. As we see, the code associates the *Take the\n",
+        "Lead* poster with the color green as would be have expected from the histogram.\n"
+      ],
+      "id": "54c9abda"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "hue.cnom.values[np.argmax(cnt)]"
+      ],
+      "id": "4e1d1c21",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The other helpful quantity that we will save is the proportion of the entire\n",
+        "poster that corresponds to this most dominant color. Using the code below, we\n",
+        "see that that over 42% of this poster corresponds to hues which we have\n",
+        "categorized as \"green\".\n"
+      ],
+      "id": "ed4de07a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "color_percent = np.max(cnt) / img_hsv.shape[0] * 100\n",
+        "color_percent"
+      ],
+      "id": "f10c8786",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now that we have seen how to do this with a single image, let's cycle through\n",
+        "all of the posters and compute the name of the dominant color and the percentage\n",
+        "of the poster corresponding to each color for each of the posters.\n"
+      ],
+      "id": "16e40ebd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters['dom_color'] = ''\n",
+        "posters['dom_color_percent'] = 0.0\n",
+        "for ind in posters.index:\n",
+        "  img = dvt.load_image(\"data/\" + posters.loc[ind, 'path'])\n",
+        "  img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)\n",
+        "  img_hsv = img_hsv.astype(np.float64)\n",
+        "  img_hsv[:, :, 0] = img_hsv[:, :, 0] / 179.0\n",
+        "  img_hsv[:, :, 1] = img_hsv[:, :, 1] / 255.0\n",
+        "  img_hsv[:, :, 2] = img_hsv[:, :, 2] / 255.0\n",
+        "  img_hsv = img_hsv.reshape((-1, 3), order = \"F\")\n",
+        "  bins = np.append(0, hue.end.values)\n",
+        "  cnt, _ = np.histogram(img_hsv[(img_hsv[:,1] * img_hsv[:,2] > 0.3), 0], bins = bins)\n",
+        "  cnt[0] = cnt[0] + cnt[7]\n",
+        "  cnt = cnt[:7]\n",
+        "  posters.loc[ind, 'dom_color'] = hue.cnom.values[np.argmax(cnt)]\n",
+        "  posters.loc[ind, 'dom_color_percent'] = color_percent = np.max(cnt) / img_hsv.shape[0] * 100"
+      ],
+      "id": "2deb4d16",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "As with the other two annotations, we can start by looking at the the posters\n",
+        "the have the most amount of dominant color for each given hue. Here, for example\n",
+        "is the code to show the image with the largest amount of blue. Try to change the\n",
+        "code to see other colors such as \"red\", \"yellow\", and \"green\".\n"
+      ],
+      "id": "24813bcc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + posters[posters.dom_color == \"blue\"].sort_values(\n",
+        "    'dom_color', ascending=False\n",
+        ").iloc[0].path)\n",
+        "plt.imshow(img)"
+      ],
+      "id": "fe8b6b10",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now, let's do some analysis with these annotations. We will join the genre\n",
+        "data back into the annotations and, as before, filter to only films from\n",
+        "1990 onwards. We will also only consider posters that have at least 5% of\n",
+        "whatever the selected dominant color is.\n"
+      ],
+      "id": "f6f4a668"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df = pd.merge(posters, genre, on=['year', 'title'])\n",
+        "df = df[df[\"year\"] >= 1990]\n",
+        "df = df[df['dom_color_percent'] > 5]\n",
+        "df"
+      ],
+      "id": "113ebd3f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Now, we can compute the proportion of posters from each genre that have red as\n",
+        "a dominant color using the code below.\n"
+      ],
+      "id": "164e83a9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['percent_color'] = (df['dom_color'] == \"red\")\n",
+        "df.groupby(['genre'])['percent_color'].mean().sort_values()"
+      ],
+      "id": "8b1dafb6",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Do you see any interesting patterns in the data above? After looking closely,\n",
+        "try to change the color of interest and see if any other patterns arise.\n",
+        "\n",
+        "## Face Detection\n",
+        "\n",
+        "When introducing the ideas behind distant viewing and the computational analysis\n",
+        "of large collections of digital images, we like to start with annotations that\n",
+        "capture color. There's a tangible connection between elements such as\n",
+        "brightness, saturation, and hue that we can instantly connect to the way that\n",
+        "digital images are created and stored. At the same time, color is not at all\n",
+        "simple. In many ways, it is a particularly difficult annotation to work with\n",
+        "because there are so many different ways to count, bucket, and summarize the\n",
+        "results. Understanding the connection between the raw pixel intensites, the\n",
+        "resulting annoations, and the semantic gap between the two is key to\n",
+        "understanding the challenges and possibilites of working with collections of\n",
+        "digital images, and distant viewing.\n",
+        "\n",
+        "Of course, many applications of distant viewing will want to integrate other\n",
+        "kinds of annotations, many of which require using more advanced machine learning\n",
+        "techniques such as neural networks and large language models. In this final\n",
+        "section of analysis, we will show how to use a face detection model to add\n",
+        "an additional annotation to our movie posters dataset using the distant viewing\n",
+        "toolkit (**dvt**).\n",
+        "\n",
+        "The distant viewing toolkit simplifes the process of applying several common\n",
+        "computer visional algorithms to still and moving images. Most of the difficult\n",
+        "work of standardizing the inputs, downloading models, and getting all of the\n",
+        "results into the same format is taken care of in dvt.\n",
+        "All that we need to do is load\n",
+        "the annotator that we are interested in, load the images of interest, and\n",
+        "create the annotations by calling a specific method from each annotator. To\n",
+        "start, we will use the code below to load and save a `AnnoFaces` object for\n",
+        "detecting faces in images. The first time this function is called, Python will\n",
+        "download the underlying model that does this processing.\n",
+        "\n",
+        "Why might we be interested in detecting faces in movie posters?\n",
+        "Which questions could we ask?\n"
+      ],
+      "id": "e4f436af"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "anno_face = dvt.AnnoFaces()"
+      ],
+      "id": "bf6e3c37",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "In order to get good results from face detection, unlike the color analysis, we\n",
+        "need to work with the full resolution version of the movie posters. We\n",
+        "downloaded a full-size image for this purpose from the movie *Love Story*,\n",
+        "the top-grossing film from 1970. Let's read this image into Python using the\n",
+        "function `load_image`. We can display this in the Colab notebook, noting that\n",
+        "it is much larger and sharper than the thumbnails we were using previously.\n"
+      ],
+      "id": "6b9bac55"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image('data/love_story.jpg')\n",
+        "plt.imshow(img)"
+      ],
+      "id": "af51c967",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "In order to run the face detection annotator on the image, we use the `run`\n",
+        "method of the annotator and provide the image that we have loaded as an\n",
+        "argument to the function.\n"
+      ],
+      "id": "4558dcca"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "out_face = anno_face.run(img, visualize=True)"
+      ],
+      "id": "94e1c38e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The output of the annotation contains two objects. The first is the original\n",
+        "image with boxes around the detected faces. This is useful for the qualatitive\n",
+        "analysis and assessment of how well the algorithm works on our data. We see\n",
+        "in this example that the algorithm has found the two faces present in the\n",
+        "poster.\n"
+      ],
+      "id": "e60329d5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "plt.imshow(out_face['img'])"
+      ],
+      "id": "f6b22d47",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "A structured data version of the detected faces is provided in the object named\n",
+        "`boxes`. It can be turned into a data frame with the `pd.DataFrame` function.\n",
+        "Here, we see that it tells us the pixel coordinates (from the upper-left hand\n",
+        "corner) of the detected faces along with a probability score, which tells us how\n",
+        "confident the prediction is that there is actually a face in the given location.\n"
+      ],
+      "id": "061d5e43"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "pd.DataFrame(out_face['boxes'])"
+      ],
+      "id": "8ecef674",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "So, as with the color annotations, the next step is to run this annotation over\n",
+        "all of the posters and collect the results. The model for face detection is\n",
+        "quite a bit slower than the color annotators and requires the larger version of\n",
+        "the movie poster data. If we were to have the full images instead of the\n",
+        "thumbnails the following code (with the hash signs removed from the start of the\n",
+        "lines, which we added here to ensure that we do not accidentally run the code) would create the desired dataset.\n"
+      ],
+      "id": "fbed9bf6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#output = []\n",
+        "#for idx, ip in enumerate(posters.index):\n",
+        "#  path = posters.loc[ind, 'path']\n",
+        "#  img = dvt.load_image(\"data/\" + path)\n",
+        "#  out_face = anno_face.run(img, visualize=False)\n",
+        "#  if 'boxes' in out_face:\n",
+        "#    df = pd.DataFrame(out_face['boxes'])\n",
+        "#    df['path'] = path\n",
+        "#    output.append(df)\n",
+        "#\n",
+        "#faces = pd.concat(output)\n",
+        "#faces = pd.merge(faces, meta)\n",
+        "#faces = faces[['year', 'title', 'face_id', 'x', 'xend', 'y', 'yend', 'prob']]\n",
+        "#faces.to_csv(\"data/movies_50_years_face.csv\", index=False)"
+      ],
+      "id": "41d003ec",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Given the time and data constraints, we have provided a version of the\n",
+        "annotated faces that we can read directly into Python as a CSV file. Note that\n",
+        "it is very similar to output directly from the `AnnoFaces` object, just\n",
+        "with the year and title of the movie added as the first two columns.\n"
+      ],
+      "id": "f5d44db8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "faces = pd.read_csv(\"data/movies_50_years_face.csv\")\n",
+        "faces"
+      ],
+      "id": "e9801a62",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The annotations above provide one row for each detected face in one of the\n",
+        "movie posters. In order to analyze these annotations, we need to aggregate\n",
+        "them so that we have a single summary value for each poster. One way to do\n",
+        "that is to filter the faces to only those above a threshold probability\n",
+        "score and then count how many faces are present in each poster. Then, we\n",
+        "can add this count back into the posters table. We need to be careful\n",
+        "about doing this so as to make sure that we are not missing the posters\n",
+        "that have zero faces. The sequence of pandas functions below puts all of\n",
+        "these steps together, as well as joining to the genre table, which we will\n",
+        "use shortly. We usually pick a pretty high threshold (.95 in this case) given our experience with\n",
+        "face detection algorithms and knowing this data.\n"
+      ],
+      "id": "de030a7a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "face_cnt = faces[faces['prob'] > 0.95][['year', 'title']].value_counts().reset_index(name='num_face')\n",
+        "face_cnt = pd.merge(posters, face_cnt, how='left')\n",
+        "face_cnt = pd.merge(face_cnt, genre)\n",
+        "face_cnt['num_face'] = face_cnt['num_face'].fillna(0)\n",
+        "face_cnt = face_cnt.sort_values('num_face', ascending=False)\n",
+        "face_cnt"
+      ],
+      "id": "dbd3929d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "As we have done with the color annotations, it is a good idea to look at some\n",
+        "of the results. The table above shows that the poster for the 1999 film\n",
+        "*Being John Malkovich* has a total of 107 faces. This may seem like an error,\n",
+        "but let's look at the movie poster to check.\n"
+      ],
+      "id": "293b198f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "img = dvt.load_image(\"data/\" + face_cnt.iloc[0].path)\n",
+        "plt.imshow(img)"
+      ],
+      "id": "58e16163",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "So, in fact, it does seem like having a hundred detected faces is reasonable\n",
+        "after looking at the poster. It's hard to confirm that the exact number is\n",
+        "correct (it's almost certainly not), but at least we feel good that the\n",
+        "algorithm is doing something reasonable. Feel free to try some other poster\n",
+        "values and see if they also have a large number of faces. In a full analysis,\n",
+        "it would be a good idea to go through and check how many of the detected faces\n",
+        "were correctly located, but for now we will take these qualitative results as a\n",
+        "good starting point and move on to a final analysis.\n",
+        "\n",
+        "Let's start by seeing if there are any temporal patterns in the average number\n",
+        "of faces present in each of the posters.\n"
+      ],
+      "id": "e72680f8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "posters.groupby(['period'])['avg_brightness'].mean()"
+      ],
+      "id": "4c1a5b0a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "What pattern(s) arise in the number of faces on the posters? Can you\n",
+        "think of any reason that there might be more faces on average during the\n",
+        "1970s compared to more recent decades?\n",
+        "\n",
+        "As with the color-based annotations, we can take the mean value of these\n",
+        "counts by genre and see if there are any interesting patterns.\n"
+      ],
+      "id": "c5cb01aa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "face_cnt.groupby(['genre'])['num_face'].mean().sort_values()"
+      ],
+      "id": "656330bb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Take a few minutes to look at the table. Do you see any consistent patterns?\n",
+        "Can you think of any hypotheses about what might be causing these? Can you think\n",
+        "of any cautions that might provide any caveats to the analysis of the face\n",
+        "detection algorithm?\n",
+        "\n",
+        "As we saw above, there are several posters that have a very large number of\n",
+        "faces. It might be enlightening to look at the median number of faces by\n",
+        "genre in addition to the average number.\n"
+      ],
+      "id": "084d65c4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "face_cnt.groupby(['genre'])['num_face'].median().sort_values()"
+      ],
+      "id": "03088f95",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "How do the median values compare to the average values? Do they help tell a\n",
+        "story about faces that are present in the poster?\n",
+        "\n",
+        "As a final analysis, to show the many different ways that we can analyze the\n",
+        "same annotations, we will compute the proportion of posters that have at least\n",
+        "one face on them and summarize by genre.\n"
+      ],
+      "id": "d9a6dd71"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "face_cnt['face_present'] = (face_cnt['num_face'] > 0)\n",
+        "face_cnt.groupby(['genre'])['face_present'].mean().sort_values()"
+      ],
+      "id": "a0ae0dd7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Do these results help add any nuance to the previous results?\n",
+        "What kinds of questions could we pose by putting them together?\n",
+        "\n",
+        "In the book, we decided to focus on one type of annotation in each chapter.\n",
+        "Chapter 3 analyzed color and movie posters, while Chapter 5 on *Bewitched*\n",
+        "and *I Dream of Jeannie* relied on face detection to look at charachters on\n",
+        "screen.  Here, we expand on the book to begin to demonstrate how layering\n",
+        "types of annotations begins to add new areas of exploration and to nuance\n",
+        "our computaitonal analysis of images.\n",
+        "\n",
+        "## Conclusions and Next Steps\n",
+        "\n",
+        "The tutorial has covered a lot of material. We've introduced the basics of\n",
+        "running Python and an understanding of how digital images are represented\n",
+        "as arrays of pixel intensites. From there, we motived the theoretical stakes\n",
+        "of distant viewing. Then, we put this into practice by generating increasingly\n",
+        "complex annotations based on our understanding of color and, finally, by using\n",
+        "a neural-network based machine learning algorithm to detected faces present in\n",
+        "each of the movie posters. Throughout, we have tried to connect each of our\n",
+        "analyess back to research questions regarding the visual cultures around\n",
+        "movie posters across different genres over a 50-year period.\n",
+        "\n",
+        "There are many directions to explore after following this notebook. If you want\n",
+        "to see how to complete the analysis presented here, including the important\n",
+        "steps of connecting our observations to existing archival and scholarly sources,\n",
+        "we suggest checking out Chapter 3 of our *Distant Viewing* book. A link is\n",
+        "available at the top of this notebook. If you are new to programming, learning\n",
+        "a [bit more Python](https://wiki.python.org/moin/BeginnersGuide)\n",
+        "from core principles is a good start. If your interests including moving\n",
+        "images, we have a follow-up notebook that works through an\n",
+        "example using a set of U.S. television shows from the 1960s and 1970s.\n",
+        "Otherwise, we suggest checking out the other annotations available in the\n",
+        "[distant viewing toolkit](https://github.com/distant-viewing/dvt)\n",
+        "and applying them to your own collections."
+      ],
+      "id": "39284a71"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/admin/gh/dv-demo/env/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

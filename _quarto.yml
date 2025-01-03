@@ -1,0 +1,56 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Distant Viewing Guidebook"
+  page-footer:
+    left: |
+      Distant Viewing Guidebook
+    right: |
+  cover-image: img/cover.png
+  favicon: img/favicon.png
+  repo-url: https://github.com/distant-viewing/dv-guidebook/
+
+  chapters:
+    - index.qmd
+
+    - part: 00_image.qmd
+      chapters:
+        - 2.1_classification.qmd
+        - 2.2_object.qmd
+        - 2.3_depth.qmd
+        - 2.4_segment.qmd
+        - 2.5_embed.qmd
+
+    - part: 00_video.qmd
+      chapters:
+        - 3.1_shot.qmd
+        - 3.2_transcription.qmd
+        - 3.3_diarization.qmd
+
+    - part: 00_text.qmd
+      chapters:
+        - 4.1_sentiment.qmd
+        - 4.2_review.qmd
+        - 4.3_comment.qmd
+        - 4.4_mask.qmd
+
+    - part: 00_multimodal.qmd
+      chapters:
+        - 5.1_zeroshot.qmd
+        - 5.2_caption.qmd
+
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - dvt.scss
+    code-link: true
+
+    author-meta: "Taylor Arnold and Lauren Tilton"
+    callout-appearance: simple
