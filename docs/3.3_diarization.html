@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d73242fb02dd6c967b710b8b8a8b7e88.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-eb3b6280cc05ac445df4c21feef64b49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is a minimal example script showing how to detect speakers in the audio track of a video file. To start, we will load in a few modules that will be needed for the task.</p>
-<div id="b99052fa" class="cell" data-execution_count="1">
+<div id="a11b5deb" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyannote.audio <span class="im">import</span> Pipeline</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pydub <span class="im">import</span> AudioSegment</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -350,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we need to load the model.</p>
-<div id="35553b72" class="cell" data-execution_count="2">
+<div id="57a61364" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline.from_pretrained(<span class="st">"statsmaths/diarize"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>INFO:speechbrain.utils.quirks:Applied quirks (see `speechbrain.utils.quirks`): [disable_jit_profiling, allow_tf32]
@@ -358,14 +358,14 @@ INFO:speechbrain.utils.quirks:Excluded quirks specified by the `SB_DISABLE_QUIRK
 </div>
 </div>
 <p>The algorthm only takes audio inputs, so we need to convert our video into a temporary wave file. If you have a wave file, this can be loaded and passed directly into the model. We will pass the audio file directly to the diarization model here as well.</p>
-<div id="dd5ce8f6" class="cell" data-execution_count="3">
+<div id="f6c1620c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tempfile.NamedTemporaryFile(suffix<span class="op">=</span><span class="st">'.wav'</span>) <span class="im">as</span> temp_file:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    audio <span class="op">=</span> AudioSegment.from_file(<span class="st">'video/sotu.mp4'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"mp4"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    audio.export(temp_file.name, <span class="bu">format</span><span class="op">=</span><span class="st">"wav"</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    diarization <span class="op">=</span> pipeline(temp_file.name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output requires a little bit of parsing before it is ready to use. Here we produce an output dictionary.</p>
-<div id="f19d713e" class="cell" data-execution_count="4">
+<div id="b12cee2f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> diarization.to_lab().split(<span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [x.split(<span class="st">' '</span>) <span class="cf">for</span> x <span class="kw">in</span> data]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> data <span class="cf">if</span> <span class="bu">len</span>(x) <span class="op">==</span> <span class="dv">3</span>]</span>
@@ -376,7 +376,7 @@ INFO:speechbrain.utils.quirks:Excluded quirks specified by the `SB_DISABLE_QUIRK
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output is constructed such that we can call the <code>from_dict</code> method from <strong>polars</strong> to construct a data frame. If needed, this can be saved as a CSV file with the <code>write_csv</code> method of the resulting data frame.</p>
-<div id="b72130f6" class="cell" data-execution_count="5">
+<div id="23b5e695" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> pl.from_dict(output)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
