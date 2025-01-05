@@ -1,3 +1,72 @@
 # 4.1 Sentiment Analysis {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to do sentiment
+analysis classification using a set of short texts stored on
+the same machine where we are running the models. To start,
+we will load in a few modules that will be needed for the
+task.
+
+```{python}
+from os import listdir
+from os.path import splitext, join
+from transformers import (
+    DistilBertTokenizer,
+    DistilBertForSequenceClassification
+)
+
+import torch
+import polars as pl
+```
+
+Next, we load the model that we are interested in using. 
+There are a large number of sentiment analysis algorithms
+on HuggingFace; most can be used exactly the same way by simply
+changing the name of the model in the function calls below.
+
+```{python}
+tokenizer = DistilBertTokenizer.from_pretrained(
+  "distilbert-base-uncased-finetuned-sst-2-english"
+)
+model = DistilBertForSequenceClassification.from_pretrained(
+  "distilbert-base-uncased-finetuned-sst-2-english"
+)
+```
+
+With the models loaded, the next step is to load in the
+dataset. Here, we have a series of short texts stored with
+one text per line in a file.
+
+```{python}
+with open('text/afi.txt', 'r') as f:
+    input_text = f.read().splitlines() 
+
+
+input_text = [x for x in input_text if x != ""]
+```
+
+And now we run the model over each of the lines, saving the
+results.
+
+```{python}
+output = {'text': [], 'label': [], 'score': []}
+for iput in input_text:
+    iput_tokenized = tokenizer(iput, return_tensors="pt")
+    with torch.no_grad():
+        logits = model(**iput_tokenized).logits
+    predicted_class_id = logits.argmax().item()
+    prob = 1 / (1 + torch.exp(-1 * logits.max()))
+    output['text'] += [iput]
+    output['label'] += [model.config.id2label[predicted_class_id]]
+    output['score'] += [prob.detach().numpy().tolist()]
+```
+
+
+The output is constructed such that we can call the `from_dict`
+method from **polars** to construct a data frame. If needed, this
+can be saved as a CSV file with the `write_csv` method of the
+resulting data frame.
+
+```{python}
+dt = pl.from_dict(output)
+dt
+```

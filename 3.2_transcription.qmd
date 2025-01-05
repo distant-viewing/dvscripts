@@ -1,3 +1,74 @@
 # 3.2 Transcription {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to detect shot
+boundaries in a video file. To start, we will load in a few
+modules that will be needed for the task.
+
+```{python}
+from transformers import pipeline, WhisperProcessor
+from pydub import AudioSegment
+
+import polars as pl
+import librosa
+import tempfile
+```
+
+Next, we need to load the model. Here we will use a smaller
+version of the Whisper algorithm called 'whisper-base'. The
+openai site has many larger (and smaller) models that can 
+produce better results in trading off download size and speed
+(or worse results with smaller models, if you use the tiny
+version). Note that we can do multilingual transcriptions
+but need to set the language that we want to transcribe in
+the input.
+
+```{python}
+pipe = pipeline(
+    "automatic-speech-recognition",
+    model="openai/whisper-base",
+    chunk_length_s=30,
+    stride_length_s=5
+)
+processor = WhisperProcessor.from_pretrained("openai/whisper-base")
+
+pipe.model.config.forced_decoder_ids = processor.get_decoder_prompt_ids(
+  language="english", task="transcribe"
+)
+```
+
+The algorthm only takes audio inputs, so we need to convert our
+video into a temporary wave file. If you have a wave file, this can
+be loaded and passed directly into the model in the next step.
+
+```{python}
+with tempfile.NamedTemporaryFile(suffix='.wav') as temp_file:
+    audio = AudioSegment.from_file('video/sotu.mp4', format="mp4")
+    audio.export(temp_file.name, format="wav")
+    audio, sr = librosa.load(temp_file.name, sr=16000)
+    sample = {'array': audio, 'sampling_rate': sr}
+```
+
+Now, we generate the transcription itself and store the results
+in a dictionary.
+
+```{python}
+#| output: false
+#| warning: false
+
+prediction = pipe(sample, batch_size=8, return_timestamps='word')["chunks"]
+output = {
+    'start': [x['timestamp'][0] for x in prediction],
+    'stop': [x['timestamp'][1] for x in prediction],
+    'text': [x['text'] for x in prediction],
+}
+```
+
+The output is constructed such that we can call the `from_dict`
+method from **polars** to construct a data frame. If needed, this
+can be saved as a CSV file with the `write_csv` method of the
+resulting data frame.
+
+```{python}
+dt = pl.from_dict(output)
+dt
+```

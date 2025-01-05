@@ -1,3 +1,26 @@
 # Text {#part-methods .unnumbered}
 
-Some text
+The scripts in this section show how to generate annotations
+from a file of text. We include it here because text is often
+include with visual materials (i.e., captions) or produced from
+them (i.e., OCR or transcriptions). As an example, we use a set
+of 100 movie quotes in the scripts. If you are running
+the code on your own, you can use any of the following:
+
+- **AFI's 100 Years... 100 Movie Quotes** (afi): The 100 most
+iconic movie quotations, as voted by a panel 1,500 film artists,
+critics, and historians.
+[[more info](https://www.afi.com/afis-100-years-100-movie-quotes/)]
+- **State of the Union Address [transcript]** (sotu-text): Transcript
+from Barack Obama's State of the Union Address in 2010. 
+[[more info](https://www.youtube.com/watch?v=L1PWQtCDaYY)]
+- **Amazon Movie Reviews** (amazon): A small sample of movie review
+titles from Amazon.
+[[more info](https://nijianmo.github.io/amazon/index.html)]
+- **New Years Message, Emmanuel Macron [fr, transcript]** (macron-text): 
+Transcript from Emmanuel Macron's New Years message.
+[[more info](https://www.youtube.com/watch?v=pnbfaueJkTY)]
+
+To get results in your browser for all of these collections 
+and your own data, see the
+[Distant Viewing Explorer](https://distant-viewing.github.io/dvgui-demo).

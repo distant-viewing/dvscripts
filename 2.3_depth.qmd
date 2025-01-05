@@ -1,3 +1,101 @@
 # 2.3 Depth Estimation {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to do depth estimation
+using a set of images that are stored on the same machine where we
+are running the models. To start, we will load in a few modules that
+will be needed for the task. 
+
+```{python}
+from os import listdir
+from os.path import splitext, join
+from transformers import pipeline
+from PIL import Image
+
+import torch
+import polars as pl
+import numpy as np
+```
+
+Next, we load the model that we are interested in using. 
+
+```{python}
+pipe = pipeline(
+  task="depth-estimation",
+  model="LiheYoung/depth-anything-small-hf"
+)
+```
+
+With the models loaded, the next step is to build a set of
+paths to the images that we are interested in using. Here,
+we will create a list of all of the image files in the
+directory containing the FSA-OWI images. Then, to save time,
+we take just the first five images to work with. We could
+run over all of the images or use a different collection by
+changing the variables below.
+
+```{python}
+collection = 'fsaowi'
+num_images = 5
+
+paths = sorted(listdir(join('img', collection)))
+paths = [x for x in paths if splitext(x)[1] == '.jpg']
+paths = paths[:num_images]
+```
+
+Now, we will load each of the images and run the model over
+it. The output of the depth prediction algorithm is another
+image with the same height and width of the input. The values
+in the image range from 0 (farther point from the camera) to
+255 (closest point to the camera). We can save the full output
+to visualize while also producing structured data about the
+detected depth. As an example, below we store the percentage
+of the image that is in the foreground (using the cutoff value
+of 192) and the percentage in the background (using the cutoff
+value of 64). We also store the brightness of the foreground
+and background. The cutoff values are just heuristics we 
+use here. Test and explore what works for your applications.
+
+```{python}
+output_image = {}
+output = {
+  'path': [],
+  'foreground_percent': [],
+  'background_percent': [],
+  'foreground_value': [],
+  'background_rgb': []
+}
+for path in paths:
+    image = Image.open(join('img', collection, path))
+    image = image.convert('RGB')
+    mask = pipe(image)["depth"]
+    output_image[path] = mask
+    arr = np.asarray(mask)
+    img = np.asarray(image)
+    foreground_rgb = img[arr > 192]
+    background_rgb = img[arr < 64]
+    output['path'] += [path]
+    output['foreground_percent'] += [np.mean(arr > 192)]
+    output['background_percent'] += [np.mean(arr < 64)]
+    output['foreground_value'] += [np.mean(foreground_rgb)]
+    output['background_rgb'] += [np.mean(background_rgb)]
+```
+
+We can convert the structured outputs that we have produced
+above into a data frame to save and explore further.
+
+```{python}
+dt = pl.from_dict(output)
+dt
+```
+
+And, to visualize the output, print the full image outputs
+themselves. They will show the depth of each pixel as a range
+from black (farthest back) to white (closest to the camera).
+
+```{python}
+for path in paths:
+    display(output_image[path])
+```
+
+
+

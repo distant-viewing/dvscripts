@@ -48,6 +48,27 @@ p {
   text-justify: inter-word;
 }
 
+.quarto-title:first-child {
+}
+
+#welcome h1 {
+  display: none;
+}
+
+
+.photo-row {
+  padding-top: 0.2em;
+  padding: 0.2em;
+  display: flex;
+  justify-content: space-around;
+}
+
+.photo-row img {
+  height: 100px !important;
+}
+
+
+
 /* Code ------------------------------------------------ */
 
 code {

@@ -1,3 +1,36 @@
 # Video + Audio {#part-methods .unnumbered}
 
-Some text
+The scripts in this section show how to generate annotations
+from a video file. As an example, we use a one minute sample
+from the 2010 State of the Union Address. If you are running
+the code on your own, you can use any of the following:
+
+- **Steamboat Willie** (steamboat): A clip from the short
+animated film Steamboat Willie, the first film to feature Mickey and Minnie Mouse. 
+[[more info](https://archive.org/details/steamboat-willie-mickey)]
+- **Mountain Community Television** (mctv): Produced by Mountain
+Community Television, this is a clip from the 'First citizen workshop ...
+aimed at letting citizens know what they can do to help implement the
+Strip Mining Control and Reclamation Act of 1977.' 
+[[more info](https://archive.org/details/9283VCBR3_Avg15MbpsVBR)]
+- **Black Journal: Interview with Angela Davis** (blackjournal): 
+A clip from episode 67 the television program Black Journal. Produced by
+NET Division, Educational Broadcasting Corporation. 
+[[more info](https://americanarchive.org/catalog/cpb-aacip_512-1v5bc3tn06)]
+- **Women: What to Tell Children** (women): A clip from the 12th episode
+of the television program Women. Produced by WNED, a PBS member television
+station in Buffalo, New York, United States. 
+[[more info]()]
+- **Taskmaster: Series 7, Episode 4** (taskmaster): A short clip from the
+British panel game show Taskmaster.
+[[more info](https://www.youtube.com/watch?v=M0ZbPzHUiAo)]
+- **State of the Union Address** (sotu): A clip from Barack Obama's State
+of the Union Address in 2010.
+[[more info](https://www.youtube.com/watch?v=L1PWQtCDaYY)]
+- **New Years Message, Emmanuel Macron [fr]** (macron): A clip from Emmanuel
+Macron's 2025 New Years message. Audio in French.
+[[more info](https://www.youtube.com/watch?v=pnbfaueJkTY)]
+
+To get results in your browser for all of these collections 
+and your own data, see the
+[Distant Viewing Explorer](https://distant-viewing.github.io/dvgui-demo).

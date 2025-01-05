@@ -1,3 +1,144 @@
 # 2.2 Object Detection {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to do object detection
+using a set of images that are stored on
+the same machine where we are running the models. To start,
+we will load in a few modules that will be needed for the
+task.
+
+```{python}
+from os import listdir
+from os.path import splitext, join
+from transformers import DetrImageProcessor, DetrForObjectDetection
+from PIL import Image, ImageDraw, ImageFont
+import matplotlib.pyplot as plt
+from matplotlib.colors import to_hex
+
+import torch
+import polars as pl
+```
+
+Next, we load the model that we are interested in using. 
+There are a large number of object detection algorithms
+on HuggingFace; most can be used exactly the same way by simply
+changing the name of the model in the function calls below.
+
+```{python}
+image_processor = DetrImageProcessor.from_pretrained(
+    "facebook/detr-resnet-50", revision="no_timm"
+)
+model = DetrForObjectDetection.from_pretrained(
+    "facebook/detr-resnet-50", revision="no_timm"
+)
+```
+
+With the models loaded, the next step is to build a set of
+paths to the images that we are interested in using. Here,
+we will create a list of all of the image files in the
+directory containing the FSA-OWI images. Then, to save time,
+we take just the first five images to work with. We could
+run over all of the images or use a different collection by
+changing the variables below.
+
+```{python}
+collection = 'fsaowi'
+num_images = 5
+
+paths = sorted(listdir(join('img', collection)))
+paths = [x for x in paths if splitext(x)[1] == '.jpg']
+paths = paths[:num_images]
+```
+
+Now, we will load each of the images and run the model over
+it. For each output, we save the top 10 predictions, with
+both their names and probabilties.
+
+```{python}
+output = {
+    'path': [],
+    'label': [],
+    'scores': [],
+    'xmin': [],
+    'xmax': [],
+    'ymin': [],
+    'ymax': []
+}
+for path in paths:
+    image = Image.open(join('img', collection, path))
+    image = image.convert('RGB')
+    inputs = image_processor(image, return_tensors="pt")
+    with torch.no_grad():
+        outputs = model(**inputs)
+    target_sizes = torch.tensor([image.size[::-1]])
+    results = image_processor.post_process_object_detection(
+      outputs, target_sizes=target_sizes, threshold=0.9
+    )
+    output['path'] += [path] * list(results[0]['scores'].size())[0]
+    output['label'] += [
+      model.config.id2label[x] for x in results[0]['labels'].tolist()
+    ]
+    output['scores'] += results[0]['scores'].tolist()
+    output['xmin'] += results[0]['boxes'][:,0].tolist()
+    output['ymin'] += results[0]['boxes'][:,1].tolist()
+    output['xmax'] += results[0]['boxes'][:,2].tolist()
+    output['ymax'] += results[0]['boxes'][:,3].tolist()
+```
+
+The output is constructed such that we can call the `from_dict`
+method from **polars** to construct a data frame. If needed, this
+can be saved as a CSV file with the `write_csv` method of the
+resulting data frame.
+
+```{python}
+dt = pl.from_dict(output)
+dt
+```
+
+Finally, to visualize the output we can use the following code
+to draw the bounding boxes on the images.
+
+```{python}
+font_size = 15
+
+for path in paths:
+    image = Image.open(join('img', collection, path))
+    image = image.convert('RGB')
+    res = dt.filter(pl.col("path") == path)
+
+    cmap = plt.get_cmap('viridis')
+    label_vals = list(set(res['label'].to_list()))
+    colors = [
+      to_hex(cmap(i / len(label_vals))) for i in range(len(label_vals))
+    ]
+    label_color_map = {
+      label: colors[i % cmap.N] for i, label in enumerate(label_vals)
+    }
+
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default(size = font_size)
+
+    for row in res.rows(named=True):
+        color = label_color_map[row['label']]
+        
+        draw.rectangle(
+          [row['xmin'], row['ymin'], row['xmax'], row['ymax']],
+          outline=color,
+          width=2
+        )
+        text_len = draw.textlength(row['label'], font=font)
+        text_background = [
+          row['xmax'] - text_len,
+          row['ymax'],
+          row['xmax'],
+          row['ymax'] + font_size + 4
+        ]
+        draw.rectangle(text_background, fill=color)
+        draw.text(
+          (row['xmax'] - text_len, row['ymax']),
+          row['label'],
+          fill='white',
+          font=font
+        )
+
+    display(image)
+```

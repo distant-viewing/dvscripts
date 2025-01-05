@@ -1,3 +1,60 @@
 # 4.2 Review Prediction {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to do review
+prediction classification using a set of short texts stored on
+the same machine where we are running the models. To start,
+we will load in a few modules that will be needed for the
+task.
+
+```{python}
+from os import listdir
+from os.path import splitext, join
+from transformers import pipeline
+
+import torch
+import polars as pl
+```
+
+Next, we load the model that we are interested in using. 
+
+```{python}
+model = pipeline(
+  task='sentiment-analysis',
+  model='nlptown/bert-base-multilingual-uncased-sentiment'
+)
+```
+
+With the models loaded, the next step is to load in the
+dataset. Here, we have a series of short texts stored with
+one text per line in a file.
+
+```{python}
+with open('text/afi.txt', 'r') as f:
+    input_text = f.read().splitlines() 
+
+
+input_text = [x for x in input_text if x != ""]
+```
+
+And now we run the model over each of the lines, saving the
+results.
+
+```{python}
+output = {'text': [], 'label': [], 'score': []}
+for iput in input_text:
+    outputs = model(iput)[0]
+    output['text'] += [iput]
+    output['label'] += [outputs['label']]
+    output['score'] += [outputs['score']]
+```
+
+
+The output is constructed such that we can call the `from_dict`
+method from **polars** to construct a data frame. If needed, this
+can be saved as a CSV file with the `write_csv` method of the
+resulting data frame.
+
+```{python}
+dt = pl.from_dict(output)
+dt
+```

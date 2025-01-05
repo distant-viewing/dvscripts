@@ -1,0 +1,8 @@
+# Tutorials {#part-methods .unnumbered}
+
+This section contains three tutorials that show how to
+use Python to apply computational techniques to visual
+materials. The first tutorial provides a gentle introduction
+to the structure of digital images and how to work with them.
+The second tutorial expands this to video files. The third is
+focused on how to build your own corpus of visual data.

@@ -1,3 +1,121 @@
 # 5.1 Zero-Shot Model {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to apply a Zero-shot
+model using a set of images that are stored on the same machine
+where we are running the models. To start, we will load in a few
+modules that will be needed for the task.
+
+```{python}
+from os import listdir
+from os.path import splitext, join
+from transformers import (
+    AutoModel,
+    AutoTokenizer,
+    SiglipTextModel,
+    AutoProcessor,
+    SiglipVisionModel
+)
+from PIL import Image
+
+import torch
+import polars as pl
+import numpy as np
+```
+
+
+Next, we load the model that we are interested in using. 
+
+```{python}
+tokenizer = AutoTokenizer.from_pretrained(
+  'google/siglip-base-patch16-256'
+)
+text_model = SiglipTextModel.from_pretrained(
+  'google/siglip-base-patch16-256'
+)
+image_processor = AutoProcessor.from_pretrained(
+  'google/siglip-base-patch16-256'
+).image_processor
+vision_model = SiglipVisionModel.from_pretrained(
+  'google/siglip-base-patch16-256'
+)
+```
+
+With the models loaded, the next step is to build a set of
+paths to the images that we are interested in using. Here,
+we will create a list of all of the image files in the
+directory containing the FSA-OWI images. For this model, it
+will be instructive to work with the entire set of images
+in the directory.
+
+```{python}
+collection = 'fsaowi'
+
+paths = sorted(listdir(join('img', collection)))
+paths = [x for x in paths if splitext(x)[1] == '.jpg']
+```
+
+Now, we will load each of the images and run the model over
+it.
+
+```{python}
+output = {}
+for path in paths:
+    image = Image.open(join('img', collection, path))
+    image = image.convert('RGB')
+    input = image_processor(image, return_tensors="pt")
+    outputs = vision_model(**input)
+    pooler_output = outputs.pooler_output
+    output[path] = pooler_output[0].detach().numpy() 
+    output[path] = output[path] / np.linalg.norm(output[path], 2)
+```
+
+Then, for any reference caption, we can compute the embeding of the
+phrase as well. Here we have an example looking at a
+caption designed for the first image in our set, but you can replace
+it with anything of interest.
+
+```{python}
+ref_phrase = "Photograph of a nurse holding a beaker over a patient."
+text_inputs = tokenizer(
+  [ref_phrase],
+  padding='max_length',
+  truncation=True,
+  return_tensors="pt"
+)
+output_text = text_model(**text_inputs).pooler_output
+output_text = output_text[0].detach().numpy()
+output_text = output_text / np.linalg.norm(output_text, 2)
+```
+
+With the text embedding, we can then compare it to each image
+embedding and determine the image that it is closest to. The
+SigLIP model has a way of converting this into a probability
+score, which we will compute as well.
+
+```{python}
+probability = []
+logit_scale = 117.330765
+logit_bias = -12.932437
+for path in paths:
+    dot_prod = np.dot(output_text, output[path])
+    value = (dot_prod * logit_scale + logit_bias)
+    probability += [1/(1 + np.exp(-1 * value))]
+```
+
+Then, we can see which images are a closest match to the
+search query that we selected.
+
+```{python}
+probability = np.array(probability)
+probability_rank = np.argsort(probability * -1)
+for idx in probability_rank[:5]:
+    path = paths[idx]
+    image = Image.open(join('img', collection, path))
+    print(
+        "Predicted to have a probability of {0:.04f}:".format(
+        probability[idx]
+    ))
+    display(image)
+```
+
+ 

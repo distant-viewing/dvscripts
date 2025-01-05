@@ -3,6 +3,65 @@ nocite: |
   @*
 ---
 
+<div style='position: relative; padding-below: 60px; border-bottom: 4px solid black'>
+  <a href='https://distantviewing.org' target='_blank' rel='noopener noreferrer'>
+    <img src='img/cover2.png' style='height: 150px'>
+  </a>
+</div>
+
 # Welcome! {.unnumbered}
 
-This is a book.
+<div style='padding: 10px'>
+</div>
+
+Welcome! Distant Viewing Scripts is a free, open-source website that
+provides tutorials and scripts for doing computational analysis with
+visual and multimodal data. All of the code is written using the Python
+programming language, with open-source models and freely accessible
+data. Please use the table of contents navigation n the left to access
+the pages of the site. 
+
+Distant Viewing Scripts is designed to complement the
+[Distant Viewing Explorer](https://distant-viewing.github.io/dvgui-demo),
+which provides web-based tools for applying and visualizing AI models
+directly in the browser. For those new to programming and/or the application
+of computer vision models, we recommend starting with the Distant Viewing Explorer
+to get a quick hands-on sense of the methods and approaches before continuing
+with the material here.
+
+The first section includes several longer tutorials. The first tutorial
+gives a gentle introduction to image analysis. It includes slides and discussion
+questions, making it an excellent starting point for both classroom use
+as well as self-study. The second tutorial expands the techniques from the
+first to include working with moving images. The final tutorial explores
+how to create and organize your own visual collections.
+
+The remainder of the scripts are grouped by data type, with one page dedicated
+to a different type of model. Many of these mirror the interactive visualizations
+from the Distant Viewing Explorer website. The code should be easy to adapt to
+your own datasets and to expand with other models of a similar kind that are
+available online.
+
+<p>
+  <span><strong>Taylor Arnold</strong></span> <br />
+  <span><strong>Lauren Tilton</strong></span> <br />
+  <span>Directors, Distant Viewing Lab, University of Richmond</span>
+</p><br>
+
+<div class="pt-5 pb-2">
+<h2>Funding</h2>
+<p>
+  <i>The Distant Viewing GUI is funded with generous support from:</i>
+<p>
+</div>
+<div class="photo-row">
+  <a href="https://www.mellon.org/" target="_blank" rel="noopener noreferrer">
+    <img src="img/mellon_logo.png" alt="Mellon Foundation" />
+  </a>
+  <a href="https://www.neh.gov/" target="_blank" rel="noopener noreferrer">
+    <img src="img/neh_logo.jpg" alt="National Endowement for the Humanities"/>
+  </a>
+</div>
+
+
+

@@ -1,3 +1,59 @@
 # 3.1 Shot Boundary {.unnumbered}
 
-Hello!
+This is a minimal example script showing how to detect shot
+boundaries in a video file. To start, we will load in a few
+modules that will be needed for the task.
+
+```{python}
+import dvt
+import polars as pl
+from PIL import Image
+```
+
+We will use the video 'sotu.mp4' in this script. You can use
+the other example files or your own files as well! To start,
+we want to get metadata about the video file, which will be
+helpful in a few moments.
+
+```{python}
+meta = dvt.video_info('video/sotu.mp4')
+meta
+```
+
+Next, we run the shot break detection algorithm over the video
+file and store the results.
+
+```{python}
+#| output: false
+#| warning: false
+
+anno = dvt.AnnoShotBreaks()
+output = anno.run('video/sotu.mp4')
+```
+
+Once the data are generated, we produce a data frame and do
+bit of cleaning of the output to generate timestamps in addition
+to the frame numbers. And now we have the predicted shot breaks
+in a structured format!
+
+```{python}
+dt = pl.from_dict(output['scenes'])
+dt = dt.with_columns((pl.col("start") / meta['fps']).alias("start_time"))
+dt = dt.with_columns((pl.col("end") / meta['fps']).alias("end_time"))
+dt
+```
+
+We can use the `yield_video` function to cycle through all the
+frames in the video. Using the shot boundary detection algorithm,
+we can save the first shot from each shot as well as print out the
+frames below. The images can be used as inputs to any of the image-based
+algorithms shown in the previous section.
+
+```{python}
+first_frames = []
+for image, frame, timestamp in dvt.yield_video('video/sotu.mp4'):
+    if frame in dt['start'].to_list():
+        first_frames += [frame]
+        pimg = Image.fromarray(image, 'RGB')
+        display(pimg)
+```

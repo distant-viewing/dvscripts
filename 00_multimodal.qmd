@@ -1,3 +1,37 @@
 # Multimodal {#part-methods .unnumbered}
 
-Some text
+The scripts in this section show how to use multimodal
+models to work with images. As an example, we use a small set
+of images from the FSA-OWI collection. If you are running the
+code on your own, you can use any of the following:
+
+- **The Met Open Collections** (met): Highlighted oil paintings
+from the many images of art works released under a public domain
+license by the the Metropolitan Museum of Art.
+[[more info](https://www.metmuseum.org/art/collection/search?showOnly=openAccess)]
+- **USDA Pomological Watercolors** (usda): A selection of watercolors
+produced the USDA to document all known fruit varieties.
+[[more info](https://search.nal.usda.gov/discovery/collectionDiscovery?vid=01NAL_INST:MAIN&collectionId=81279629860007426)]
+- **FSA-OWI Archive** (fsaowi): A selection of images from the
+photographic collection documenting life in the United States during
+the Great Depression and the Second World War.
+[[more info](https://photogrammar.org/)]
+- **Women: What to Tell Children** (women-still): Still images from
+the shots detected in the 12th episode of the television show Women.
+Produced by WNED, a PBS member television station in Buffalo, New York,
+United States.
+[[more info](https://americanarchive.org/catalog/cpb-aacip-81-03qv9szv)]
+- **Documerica** (documerica): Selection of photographs produced by
+the U.S. Environmental Protection Agency (EPA) in an effort to improve
+the health of the environment and American citizens.
+[[more info](https://digitaldocumerica.org/)]
+- **ImageNet Large Scale Visual Recognition Challenge (ILSVRC)** (imagenet):
+One example image from each of the 1000 categories used in the ILSVRC competition.
+[[more info](https://image-net.org/challenges/LSVRC/)]
+- **Microsoft COCO: Common Objects in Context** (mscoco): One example image
+from each of the categories in the Microsoft COCO computer vision challenge.
+[[more info](https://cocodataset.org/#home)]
+
+To get results in your browser for all of these collections 
+and your own data, see the
+[Distant Viewing Explorer](https://distant-viewing.github.io/dvgui-demo).

@@ -3,17 +3,21 @@ project:
   output-dir: docs
 
 book:
-  title: "Distant Viewing Guidebook"
+  title: "Distant Viewing Scripts"
   page-footer:
     left: |
-      Distant Viewing Guidebook
+      Distant Viewing Scripts
     right: |
-  cover-image: img/cover.png
-  favicon: img/favicon.png
-  repo-url: https://github.com/distant-viewing/dv-guidebook/
+  favicon: img/dlogo.ico
+  repo-url: https://github.com/distant-viewing/dv-demo/
 
   chapters:
     - index.qmd
+
+    - part: 00_tutorials.qmd
+      chapters:
+        - 1.1_tutorial1.qmd
+        - 1.2_tutorial2.qmd
 
     - part: 00_image.qmd
       chapters:
