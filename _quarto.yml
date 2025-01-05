@@ -45,6 +45,7 @@ book:
         - 5.1_zeroshot.qmd
         - 5.2_caption.qmd
 
+    - citation.qmd
     - references.qmd
 
 bibliography: references.bib

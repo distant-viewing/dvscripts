@@ -1,0 +1,31 @@
+---
+nocite: |
+  @*
+---
+
+# Citation + Funding {.unnumbered}
+
+<div style='padding: 10px'>
+</div>
+
+If you use the Distant Viewing Scripts for your work, please cite it as:
+
+<blockquote>Taylor Arnold and Lauren Tilon, <i>Distant Viewing Scripts</i> (2025). https://distantviewing.org/dvscripts</blockquote>
+
+<div>
+<h2>Funding</h2>
+<p>
+  The Distant Viewing GUI is funded with generous support from:
+<p>
+</div>
+<div class="photo-row">
+  <a href="https://www.mellon.org/" target="_blank" rel="noopener noreferrer">
+    <img src="img/mellon_logo.png" alt="Mellon Foundation" />
+  </a>
+  <a href="https://www.neh.gov/" target="_blank" rel="noopener noreferrer">
+    <img src="img/neh_logo.jpg" alt="National Endowement for the Humanities"/>
+  </a>
+</div>
+
+
+

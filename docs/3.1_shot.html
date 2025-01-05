@@ -307,6 +307,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./citation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citation + Funding</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -342,13 +348,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is a minimal example script showing how to detect shot boundaries in a video file. To start, we will load in a few modules that will be needed for the task.</p>
-<div id="ca6636b0" class="cell" data-execution_count="1">
+<div id="9629106d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dvt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We will use the video ‘sotu.mp4’ in this script. You can use the other example files or your own files as well! To start, we want to get metadata about the video file, which will be helpful in a few moments.</p>
-<div id="6f7252bb" class="cell" data-execution_count="2">
+<div id="a8732fa5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> dvt.video_info(<span class="st">'video/sotu.mp4'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>meta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -359,12 +365,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Next, we run the shot break detection algorithm over the video file and store the results.</p>
-<div id="fea61e68" class="cell" data-execution_count="3">
+<div id="0de77a50" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>anno <span class="op">=</span> dvt.AnnoShotBreaks()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> anno.run(<span class="st">'video/sotu.mp4'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once the data are generated, we produce a data frame and do bit of cleaning of the output to generate timestamps in addition to the frame numbers. And now we have the predicted shot breaks in a structured format!</p>
-<div id="414e7f51" class="cell" data-execution_count="4">
+<div id="54aabd4a" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> pl.from_dict(output[<span class="st">'scenes'</span>])</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> dt.with_columns((pl.col(<span class="st">"start"</span>) <span class="op">/</span> meta[<span class="st">'fps'</span>]).alias(<span class="st">"start_time"</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> dt.with_columns((pl.col(<span class="st">"end"</span>) <span class="op">/</span> meta[<span class="st">'fps'</span>]).alias(<span class="st">"end_time"</span>))</span>
@@ -448,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can use the <code>yield_video</code> function to cycle through all the frames in the video. Using the shot boundary detection algorithm, we can save the first shot from each shot as well as print out the frames below. The images can be used as inputs to any of the image-based algorithms shown in the previous section.</p>
-<div id="90a1ac41" class="cell" data-execution_count="5">
+<div id="54454ccc" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>first_frames <span class="op">=</span> []</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> image, frame, timestamp <span class="kw">in</span> dvt.yield_video(<span class="st">'video/sotu.mp4'</span>):</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> frame <span class="kw">in</span> dt[<span class="st">'start'</span>].to_list():</span>
