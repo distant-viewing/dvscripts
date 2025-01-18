@@ -1,0 +1,3 @@
+```
+rsync -avz /Users/admin/gh/dv-demo/* taylorar@distantviewing.org:/home/taylorar/public_html/distantviewing/dvscripts
+```
