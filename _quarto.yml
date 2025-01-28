@@ -21,11 +21,12 @@ book:
 
     - part: 00_image.qmd
       chapters:
-        - 2.1_classification.qmd
-        - 2.2_object.qmd
-        - 2.3_depth.qmd
-        - 2.4_segment.qmd
-        - 2.5_embed.qmd
+        - 2.1_color.qmd
+        - 2.2_classification.qmd
+        - 2.3_object.qmd
+        - 2.4_depth.qmd
+        - 2.5_segment.qmd
+        - 2.6_embed.qmd
 
     - part: 00_video.qmd
       chapters:

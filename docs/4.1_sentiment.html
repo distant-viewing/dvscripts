@@ -188,32 +188,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.1_classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.1 Image Classification</span></a>
+  <a href="./2.1_color.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Color + Complexity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.2_object.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.2 Object Detection</span></a>
+  <a href="./2.2_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.2 Image Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.3_depth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.3 Depth Estimation</span></a>
+  <a href="./2.3_object.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.3 Object Detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4_segment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.4 Image Segmentation</span></a>
+  <a href="./2.4_depth.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.4 Depth Estimation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.5_embed.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.5 Embedding</span></a>
+  <a href="./2.5_segment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.5 Image Segmentation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.6_embed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.6 Embedding</span></a>
   </div>
 </li>
       </ul>
@@ -348,7 +354,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is a minimal example script showing how to do sentiment analysis classification using a set of short texts stored on the same machine where we are running the models. To start, we will load in a few modules that will be needed for the task.</p>
-<div id="94bc09da" class="cell" data-execution_count="1">
+<div id="b3e516fc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os <span class="im">import</span> listdir</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os.path <span class="im">import</span> splitext, join</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> (</span>
@@ -360,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we load the model that we are interested in using. There are a large number of sentiment analysis algorithms on HuggingFace; most can be used exactly the same way by simply changing the name of the model in the function calls below.</p>
-<div id="c68f250a" class="cell" data-execution_count="2">
+<div id="795b46c5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> DistilBertTokenizer.from_pretrained(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"distilbert-base-uncased-finetuned-sst-2-english"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -369,7 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With the models loaded, the next step is to load in the dataset. Here, we have a series of short texts stored with one text per line in a file.</p>
-<div id="63af087d" class="cell" data-execution_count="3">
+<div id="2c70d2ca" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'text/afi.txt'</span>, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    input_text <span class="op">=</span> f.read().splitlines() </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -377,7 +383,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>input_text <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> input_text <span class="cf">if</span> x <span class="op">!=</span> <span class="st">""</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And now we run the model over each of the lines, saving the results.</p>
-<div id="e455ab5e" class="cell" data-execution_count="4">
+<div id="6475abd1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> {<span class="st">'text'</span>: [], <span class="st">'label'</span>: [], <span class="st">'score'</span>: []}</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> iput <span class="kw">in</span> input_text:</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    iput_tokenized <span class="op">=</span> tokenizer(iput, return_tensors<span class="op">=</span><span class="st">"pt"</span>)</span>
@@ -390,7 +396,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    output[<span class="st">'score'</span>] <span class="op">+=</span> [prob.detach().numpy().tolist()]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output is constructed such that we can call the <code>from_dict</code> method from <strong>polars</strong> to construct a data frame. If needed, this can be saved as a CSV file with the <code>write_csv</code> method of the resulting data frame.</p>
-<div id="a13a8b44" class="cell" data-execution_count="5">
+<div id="07a3bb4d" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> pl.from_dict(output)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">

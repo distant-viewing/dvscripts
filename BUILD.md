@@ -9,6 +9,7 @@ python3 -m pip install jupyter
 python3 -m pip install matplotlib
 python3 -m pip install torch torchvision torchaudio
 python3 -m pip install transformers
+python3 -m pip install polars pydub
 python3 -m pip install onnxruntime
 python3 -m pip install sentencepiece protobuf librosa soundfile pyannote.audio
 pip freeze > requirements.txt

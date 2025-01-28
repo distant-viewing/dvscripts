@@ -25,7 +25,7 @@ the input.
 ```{python}
 pipe = pipeline(
     "automatic-speech-recognition",
-    model="openai/whisper-base",
+    model="openai/whisper-small",
     chunk_length_s=30,
     stride_length_s=5
 )
@@ -55,7 +55,7 @@ in a dictionary.
 #| output: false
 #| warning: false
 
-prediction = pipe(sample, batch_size=8, return_timestamps='word')["chunks"]
+prediction = pipe(sample.copy(), return_timestamps='word')["chunks"]
 output = {
     'start': [x['timestamp'][0] for x in prediction],
     'stop': [x['timestamp'][1] for x in prediction],
