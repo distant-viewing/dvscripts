@@ -1,0 +1,2629 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.39">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Taylor Arnold and Lauren Tilton">
+
+<title>1.1 Tutorial I: Digital Images – Distant Viewing Scripts</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./tutorial-moving-images.html" rel="next">
+<link href="./tutorials.html" rel="prev">
+<link href="./img/dlogo.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-eb3b6280cc05ac445df4c21feef64b49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tutorials.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./tutorial-digital-images.html">1.1 Tutorial I: Digital Images</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Distant Viewing Scripts</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/distant-viewing/dv-demo/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./tutorials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorial-digital-images.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">1.1 Tutorial I: Digital Images</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tutorial-moving-images.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.2 Tutorial II: Moving Images</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./image.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Images</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./color.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Color + Complexity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.2 Image Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./object.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.3 Object Detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./depth.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.4 Depth Estimation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./segment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.5 Image Segmentation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./embed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.6 Embedding</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./video.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Video + Audio</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./shot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3.1 Shot Boundary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./transcription.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3.2 Transcription</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./diarization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3.3 Diarization</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Text</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sentiment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4.1 Sentiment Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4.2 Review Prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./comment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4.3 Comment Prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mask.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4.4 Text Mask</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./multimodal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./zeroshot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5.1 Zero-Shot Model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./caption.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5.2 Image Caption</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./citation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citation + Funding</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#movie-poster-dataset" id="toc-movie-poster-dataset" class="nav-link" data-scroll-target="#movie-poster-dataset">Movie Poster Dataset</a></li>
+  <li><a href="#digital-images" id="toc-digital-images" class="nav-link" data-scroll-target="#digital-images">Digital Images</a></li>
+  <li><a href="#distant-viewing-theory" id="toc-distant-viewing-theory" class="nav-link" data-scroll-target="#distant-viewing-theory">Distant Viewing: Theory</a></li>
+  <li><a href="#annotating-image-brightness" id="toc-annotating-image-brightness" class="nav-link" data-scroll-target="#annotating-image-brightness">Annotating Image Brightness</a></li>
+  <li><a href="#saturation-and-chroma" id="toc-saturation-and-chroma" class="nav-link" data-scroll-target="#saturation-and-chroma">Saturation and Chroma</a></li>
+  <li><a href="#dominant-color" id="toc-dominant-color" class="nav-link" data-scroll-target="#dominant-color">Dominant Color</a></li>
+  <li><a href="#face-detection" id="toc-face-detection" class="nav-link" data-scroll-target="#face-detection">Face Detection</a></li>
+  <li><a href="#conclusions-and-next-steps" id="toc-conclusions-and-next-steps" class="nav-link" data-scroll-target="#conclusions-and-next-steps">Conclusions and Next Steps</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tutorials.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./tutorial-digital-images.html">1.1 Tutorial I: Digital Images</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">1.1 Tutorial I: Digital Images</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This notebook provides an introduction to the methods presented in the book <em>Distant Viewing: Computational Exploration of Digital Images</em> (MIT Press, 2023). We replicate and extend portions of the analysis using a collection of 5000 movie posters presented in the the third chapter of the book. We do not assume any prior knowledge of Python or computer vision in these notes. While a complete introduction to Python is not in the scope of our introduction, we do our best to highlight the main features of the language as they apply to the application here. Here are the specific learning outcomes for the tutorial:</p>
+<ol type="1">
+<li>Explain how digital images are stored as pixel arrays.</li>
+<li>Connect the structure of digital images with computational methods through the distant viewing framework.</li>
+<li>Apply pre-constructed Python code to study a collection of digital images.</li>
+<li>Explain measurements such as hue, saturation, chroma, and value using color theory.</li>
+<li>Compare movie poster composition through time and across genres.</li>
+<li>Produce annotations with state-of-the-art computer vision algorithms to detect faces using the distant viewing toolkit.</li>
+</ol>
+<p>For further information about the distant viewing toolkit (<strong>dvt</strong>), the open-source Python package that we have developed, please see the <a href="https://github.com/distant-viewing/dvt">project’s homepage</a>. More information about the theory of distant viewing and the specific application to movie image posters can be the found in our book, which is available to download for free under an open access license on our <a href="https://www.distantviewing.org/book/">website</a> along with additional data and code to replicate the other studies shown in the text. A second notebook following up on the methods here using moving images can be found <a href="https://colab.research.google.com/drive/1qQKQw8qHsTG7mK7Rz-z8nBfl98QBMWGf?usp=sharing">here</a>.</p>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div id="324e8e9a" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dvt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In Google Colab, your working environment resets itself everytime you reopen a notebook. Therefore, all of the steps above need to be re-run each time that you start the notebook. If you were running this code on your own machine, the installation of the <strong>dvt</strong> package and downloading the data would only need to be done once. Loading the modules in the final code chunk, however, always needs to be run each time that Python is restarted.</p>
+</section>
+<section id="movie-poster-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="movie-poster-dataset">Movie Poster Dataset</h2>
+<p>Before we jump into the analysis of the movie posters images, it is important to take a moment to look at the metadata that we have attached to each poster and to understand the structure of the dataset. In the code below, we use the <code>read_csv</code> function from the pandas module (which we have given the short name <strong>pd</strong> following standard Python conventions) to load the csv file that has one row for each movie in our dataset. We will save the output of the function as an object named <code>posters</code>. In the final line of the code, we write the object name all by itself, which causes the first file lines of the dataset to be printed inside of the notebook for us to look at. The data contains one row for each of the 100 top grossing films for each year from 1970 through 2019. For a few movies during the 1970s we were not able to find the movie posters; these are excluded from the dataset. For each movie, we have the year, the title, the file name of the associated image of the movie poster, and a description of the half decade that the movie comes from. The latter will be used in our analysis of change over time.</p>
+<div id="c418b82f" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>posters <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_meta.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>posters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">path</th>
+<th data-quarto-table-cell-role="th">period</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1970</td>
+<td>Love Story</td>
+<td>thm/1970_love_story.jpg</td>
+<td>1970-1974</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1970</td>
+<td>Airport</td>
+<td>thm/1970_airport.jpg</td>
+<td>1970-1974</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1970</td>
+<td>M.A.S.H.</td>
+<td>thm/1970_mash.jpg</td>
+<td>1970-1974</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1970</td>
+<td>Patton</td>
+<td>thm/1970_patton.jpg</td>
+<td>1970-1974</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1970</td>
+<td>Little Big Man</td>
+<td>thm/1970_little_big_man.jpg</td>
+<td>1970-1974</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4675</td>
+<td>2019</td>
+<td>The Art of Self-Defense</td>
+<td>thm/2019_the_art_of_selfdefense.jpg</td>
+<td>2015-2019</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4676</td>
+<td>2019</td>
+<td>Luce</td>
+<td>thm/2019_luce.jpg</td>
+<td>2015-2019</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4677</td>
+<td>2019</td>
+<td>The Other Side of Heaven 2: Fire of Faith</td>
+<td>thm/2019_the_other_side_of_heaven__fire_of_fai...</td>
+<td>2015-2019</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4678</td>
+<td>2019</td>
+<td>The Aftermath</td>
+<td>thm/2019_the_aftermath.jpg</td>
+<td>2015-2019</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4679</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>thm/2019_the_kid.jpg</td>
+<td>2015-2019</td>
+</tr>
+</tbody>
+</table>
+
+<p>4680 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<p>We have another set of metadata that associates each film with one or more genre categories. The dataset contains one row for each pair of film and genre tag. The year is included because there are several films that share the same title, but can be uniquely identified by knowing the title and year of the film.</p>
+<div id="f79d8149" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>genre <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_tags.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>genre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">genre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1970</td>
+<td>Love Story</td>
+<td>Drama</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1970</td>
+<td>Love Story</td>
+<td>Romance</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1970</td>
+<td>Airport</td>
+<td>Action</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1970</td>
+<td>Airport</td>
+<td>Drama</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1970</td>
+<td>Airport</td>
+<td>Thriller</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11309</td>
+<td>2019</td>
+<td>The Other Side of Heaven 2: Fire of Faith</td>
+<td>Drama</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11310</td>
+<td>2019</td>
+<td>The Aftermath</td>
+<td>Drama</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11311</td>
+<td>2019</td>
+<td>The Aftermath</td>
+<td>Romance</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11312</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>Biography</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11313</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>Drama</td>
+</tr>
+</tbody>
+</table>
+
+<p>11314 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<p>Looking at the first and last few rows, do the genre tags seem reasonable for the given films? Our analyses in the remainder of the notebook will focus on movie poster patterns across time periods and genres.</p>
+<p>Now that we have a sense of our data, what kinds of questions might we be interesed in exploring?</p>
+</section>
+<section id="digital-images" class="level2">
+<h2 class="anchored" data-anchor-id="digital-images">Digital Images</h2>
+<p>Now that we have seen the metadata for the movie posters, let’s look at how digital images are manipulated in Python by loading in the image from a single movie poster. All of the movie posters are stored as JPEG files (an abbreviation for the Joint Photographic Experts Group). This is a common image format that can be opened and understood by nearly any program or device that works with images. If you opened a JPEG file on your computer or phone, it would display the image without any special setup required. Many of the images that you see on public websites are stored as JPEG files and are processed and displayed by your browser.</p>
+<p>In the code below, we use the function <code>dvt.load_image</code> to load an image into Python. We save the image as an object named <code>img</code>. The path to the poster image is taken directly from the metadata above. Here, we are using the formula of taking the name of the dataset (<code>posters</code>) followed by a period and the name of the column (<code>path</code>) followed by the row number in square brackets (<code>[10]</code>). We have selected the poster from the John Wayne film <em>The Legend</em> because it has a distinct orange tone that will be interesting to look at. After loading the image into Python, we print out the image object in the second line by including it on it’s own final line.</p>
+<div id="055dfd97" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.path[<span class="dv">10</span>])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-5-output-1.png" width="296" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that it’s relatively easy to load a common image file format into Python and then to display it within the notebook. In order to best understand the computational analyses that follow, it will be helpful to investigate the the way that digital image is represented inside of Python. We can use the built-in Python function <code>type</code> to see the obect type of any Python object. Let’s do that below:</p>
+<div id="b30a482f" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>numpy.ndarray</code></pre>
+</div>
+</div>
+<p>You may have reasonably assumed that the object would have a name related to the fact that it contains an image. But, we see that it is cryptically called a <code>numpy.ndarray</code>. What does this mean? This is a generic data type created by the numpy library (the same one that we loaded above in the setup section) to store rectangular blocks of numbers.</p>
+<p>To understand how an array of numbers can represent an image, we will print out the object’s shape attribute (an attribute is a characteristic of a Python object that we can access with the object name followed by a <code>.</code> and the attribute name). This tells us how the numbers in array are arranged.</p>
+<div id="e0ea8a8e" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>img.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>(229, 150, 3)</code></pre>
+</div>
+</div>
+<p>We see that the shape of the object has three components. The first number tells us how many rows of numbers there are and the second tells us how many columns there are. The third number indicates that there is a third dimension with a size of three. The easiest way to picture this is to think of having three sets of rectangular grids of numbers, each with 229 rows and 150 numbers. Think of an Excel file with three sheets, each having a grid of numbers of the same size.</p>
+<p>A specific row and column in this grid of numbers represents a <em>pixel</em> (picture + element), the smallest individal component of an image. We need three different numbers for each pixel to indicate the amount of red, green, and blue light that is needed to combine to create the color at each particular location. The Python library that we are using here represents the quantity of light on a scale from 0 (not turned on at all) through 255 (as bright as possible). Blending these three components together can recreate nearly any color observable by the human eye.</p>
+<p>To make this more concrete, let’s see an example of the numbers that create the image above. There are far too many to look at all at once. Instead, we will use a bracket notation to select the first ten rows, first eight columns, and the first color component. Python uses a convention that is common in computer programing that starts counting at zero, so the <code>0</code> below grabs from the first array of numbers, which here correspond to the red color intensity.</p>
+<div id="44c1b192" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">10</span>, :<span class="dv">8</span>, <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>array([[202, 206, 205, 204, 208, 207, 204, 208],
+       [208, 206, 206, 206, 205, 206, 207, 206],
+       [204, 204, 210, 208, 197, 197, 206, 209],
+       [207, 204, 208, 207, 200, 202, 208, 208],
+       [209, 206, 205, 206, 207, 208, 209, 206],
+       [204, 206, 207, 206, 206, 205, 205, 207],
+       [206, 206, 206, 206, 208, 207, 207, 207],
+       [206, 204, 205, 206, 206, 207, 208, 206],
+       [206, 206, 206, 206, 206, 206, 207, 208],
+       [206, 206, 206, 206, 206, 207, 207, 208]], dtype=uint8)</code></pre>
+</div>
+</div>
+<p>The portion of the image that we grabbed above is the far upper left-hand corner. We see that to represent this corner we need to turn on a lot of red light (around 200ish out a possible 255). However, if we look at the image there appear to be no color red anywhere. The upper left-hand corner appears to be white. To understand how this is the case, let’s look at the second component, which is the amount of green light.</p>
+<div id="6b483351" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">10</span>, :<span class="dv">8</span>, <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>array([[202, 206, 205, 204, 208, 207, 204, 208],
+       [208, 206, 206, 206, 205, 206, 207, 206],
+       [204, 204, 210, 208, 197, 197, 206, 209],
+       [207, 204, 208, 207, 200, 202, 208, 208],
+       [209, 206, 205, 206, 207, 208, 209, 206],
+       [204, 206, 207, 206, 206, 205, 205, 207],
+       [206, 206, 206, 206, 208, 207, 207, 207],
+       [206, 204, 205, 206, 206, 207, 208, 206],
+       [206, 206, 206, 206, 206, 206, 207, 208],
+       [206, 206, 206, 206, 206, 207, 207, 208]], dtype=uint8)</code></pre>
+</div>
+</div>
+<p>And while we are at it, also the amount of blue light.</p>
+<div id="074b2bd4" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">10</span>, :<span class="dv">8</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>array([[202, 206, 205, 204, 208, 207, 204, 208],
+       [208, 206, 206, 206, 205, 206, 207, 206],
+       [206, 206, 212, 210, 199, 199, 208, 211],
+       [209, 206, 210, 209, 202, 204, 210, 210],
+       [211, 208, 207, 208, 209, 210, 211, 208],
+       [206, 208, 209, 208, 208, 207, 207, 209],
+       [208, 208, 208, 208, 210, 209, 209, 209],
+       [208, 206, 207, 208, 208, 209, 210, 208],
+       [208, 208, 208, 208, 208, 208, 209, 210],
+       [208, 208, 208, 208, 208, 209, 209, 210]], dtype=uint8)</code></pre>
+</div>
+</div>
+<p>Looking above, we see that the red, green, and blue lights are all turned on at the same level in the upper left-hand corner of the image. When we blend light from all three colors together, we get a shade of grey. This is something closer to black when the colors are all turned low, and something closer to white when the colors are all turned higher. So now this approximates what we see in the upper left corner of the image, corresponding to a shade of grey that is very close to white.</p>
+<p>To solidify our understanding how these components work, let’s see another part of the image corresponding to rows 180-190 and columns 25-30. It’s very small, but by looking closely we should be able to connect it to the image above. The resulting image is too small for Colab to automatically treat as an image for display purposes, so we need to use the <code>plt.imshow</code> function to display the pixel values as pixels.</p>
+<div id="a42f0592" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(img[<span class="dv">180</span>:<span class="dv">190</span>, <span class="dv">25</span>:<span class="dv">30</span>, :])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-11-output-1.png" width="222" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This small window of the image is part of the orange at the bottom of the movie poster. Let’s see the red, green, and blue components that make up this color.</p>
+<div id="a060d51a" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>img[<span class="dv">180</span>, <span class="dv">25</span>, :]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>array([189, 106,   0], dtype=uint8)</code></pre>
+</div>
+</div>
+<p>The dark orange color comes from blending a good amount of red light (189/255), a bit of green (106/255), and no blue (0/255) together. Looking at a color wheel should help explain why orange comes from mixing a bit of green with a larger bit of red.</p>
+<p>Different image processing libraries have slightly different conventions for how to represent digital images. Most use the same ordering of the colors (red, green, blue), and some use fractions between 0 and 1 rather than integers between 0 and 255. Certain image formats include a fourth component, called an alpha channel, to represent image opacity. Other formats contain a single color channel to represent grayscale images. However, all of these formats have the same underlying concept of representing digital images through numbers that indicate pixel intensities. This is a very different way of thinking about images than the way that humans process visual signals and is something that we will explore in the next section.</p>
+<p>Now we know we can look closely at color within the posters, which we can combine with the metadata. What are additional questions that we can ask about movie posters?</p>
+</section>
+<section id="distant-viewing-theory" class="level2">
+<h2 class="anchored" data-anchor-id="distant-viewing-theory">Distant Viewing: Theory</h2>
+<p>Computers represent images by understanding them as three-dimensional arrays of numbers. This is very different from the way that images are interpreted and used by human viewers. Furthermore, the connection between these two representations is not at all obvious. There is no way to understand what is being represented by a small subset of pixel intensities without seeing a large part of the image as a whole. Even something as simple as the amount of blue light in a given pixel can be difficult to understand. A lot of blue could be the color blue, or could just be blended with red and green to make white. So, in order to do computational analyses with large collections of digital images, we first need to convert these raw pixel intensities into representations that match the interpretations of the images that we are interested in studying.</p>
+<p>The theory behind distant viewing stems from this exact realization. Namely, that the way digital images are represented forces us to construct <em>annotations</em> that hold structured data that aligns with our research questions. These annotations, which can be created manually or using computational algorithms, are both destructive (there is information lost in the process of creating them) and open to interpretation (there is never a neutral way of creating annotations; decisions always need to be made about how they are created).</p>
+<p>We will work towards more complex annotations, but let’s start with one of the most straightforward: image brightness. Pixel intensities tell us how much to turn on the red, green, and blue lights at each postion of the image to create a display of a given image. The higher these numbers are, it stands to reason, the brighter the image will be when shown on a digital display. So, one way to represent a meaningful annotation about an image is to take the average value of all pixel intensities. We can do this with the following code, which uses the numpy function <code>mean</code> to compute the average (mean) of all the values in an array.</p>
+<div id="50574b84" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>np.mean(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>np.float64(93.82433770014556)</code></pre>
+</div>
+</div>
+<p>Little argument probably needs to be made to convince someone that a lot of information is lost between this one number and all of the rich information that is present in the thumbnail image of the movie poster. There is no information about the content of the text in the image, the dominant orange color, the shape of the man and the horse, the white border, or the way each of these elements is arranged in the frame. So, clearly this process of creating annotations is a destructive one. The difference between the summarized annotation (a single number) and the information in the original image is known in information theory as a <em>semantic gap</em>. But what about the second part of the theory, that this measurement is non-netural and represents specific choices about how we want to <em>view</em> at a distance? While this may seem less obvious, there are many different ways of measuring the brightness of an image. For example, we might want to consider the median value of the pixel intensities rather than their average value as in the code below.</p>
+<div id="a5938f4d" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>np.median(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>np.float64(75.0)</code></pre>
+</div>
+</div>
+<p>Alternatively, because the human eye is more sensitive to green than blue or red light, we might want to weight the brightness more heavily based on the color of light that is being used. Many movie posters have black or white borders, which could heavily influence the brightness of the image as a whole. Perhaps we would want to only take the brightness at the middle part of the image. And of course, why do we even care about the brightness of the image in the first place? Once we start thinking about all of these different options, it should become clear that there is no perfect way to represent any element of an image as structured data. Choices and tradeoffs are always being made. Eventually we need to make some of those choices and see what we can learn with them, while keeping the caveats about the nature of image annotations and the resulting semantic gaps always in the back of our mind. In other words, when we are analyzing images through computer vision, we are distant viewing.</p>
+</section>
+<section id="annotating-image-brightness" class="level2">
+<h2 class="anchored" data-anchor-id="annotating-image-brightness">Annotating Image Brightness</h2>
+<p>We have now carefully worked through the way the digital images are stored, understood the implication for this in terms of the theory of distant viewing, and shown one particular way of constructing an annotation through image brightness. Let’s now put this together to do an analysis of the movie posters based on their overall brightness. As a first step, we need to repeat the process used with the one poster above to all of the images in the dataset. In order to do this we use a loop in Python. This consists of the keyword <code>for</code>, followed by a block of indented code. Each of the lines of the indented code will be run once for every value of the iteration variable <code>ind</code> from the set of row numbers in the <code>posters</code> dataset. So, we will load the image of each poster into Python, compute the image brightness, and the save the brightness in a new column that we created in the dataset. To match the results in the book as closely as possible, we will divide the brightness by 255 so that the values range from 0 (completely black) to 1 (completely white).</p>
+<div id="33caf9b6" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'avg_brightness'</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind <span class="kw">in</span> posters.index:</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.loc[ind, <span class="st">'path'</span>])</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'avg_brightness'</span>] <span class="op">=</span> np.mean(img) <span class="op">/</span> <span class="dv">255</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that we have added the annotation of the image brightness to each of the rows of the poster data, we can arrange the posters from the brightest to the darkest using the <code>sort_values</code> method.</p>
+<div id="9504d2df" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>posters <span class="op">=</span> posters.sort_values(<span class="st">'avg_brightness'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>posters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">path</th>
+<th data-quarto-table-cell-role="th">period</th>
+<th data-quarto-table-cell-role="th">avg_brightness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3634</td>
+<td>1999</td>
+<td>My Favorite Martian</td>
+<td>thm/1999_my_favorite_martian.jpg</td>
+<td>1995-1999</td>
+<td>0.959253</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4475</td>
+<td>2015</td>
+<td>Steve Jobs</td>
+<td>thm/2015_steve_jobs.jpg</td>
+<td>2015-2019</td>
+<td>0.957483</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4569</td>
+<td>2017</td>
+<td>Downsizing</td>
+<td>thm/2017_downsizing.jpg</td>
+<td>2015-2019</td>
+<td>0.957002</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2465</td>
+<td>1972</td>
+<td>Instant Replay (In Situ Installation)</td>
+<td>thm/1972_instant_replay_in_situ_installation.jpg</td>
+<td>1970-1974</td>
+<td>0.953151</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4140</td>
+<td>2009</td>
+<td>Precious</td>
+<td>thm/2009_precious.jpg</td>
+<td>2005-2009</td>
+<td>0.949430</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4194</td>
+<td>2010</td>
+<td>Predators</td>
+<td>thm/2010_predators.jpg</td>
+<td>2010-2014</td>
+<td>0.036327</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3406</td>
+<td>1994</td>
+<td>Wes Craven's New Nightmare</td>
+<td>thm/1994_wes_cravens_new_nightmare.jpg</td>
+<td>1990-1994</td>
+<td>0.034680</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3287</td>
+<td>1992</td>
+<td>Consenting Adults</td>
+<td>thm/1992_consenting_adults.jpg</td>
+<td>1990-1994</td>
+<td>0.034447</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1723</td>
+<td>2006</td>
+<td>Saw III</td>
+<td>thm/2006_saw_iii.jpg</td>
+<td>2005-2009</td>
+<td>0.033579</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">592</td>
+<td>1983</td>
+<td>Zelig</td>
+<td>thm/1983_zelig.jpg</td>
+<td>1980-1984</td>
+<td>0.030483</td>
+</tr>
+</tbody>
+</table>
+
+<p>4680 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<p>The theory of distant viewing tells us that the creation of annotations, while a necessary step in computational analysis of images, is both destructive and subjective. So, before continuing to an aggregative analysis, it is useful to connect the annotations back to the images by actually looking at some of the posters. One way to do that is to look at posters with extreme values. In the code below we load the first image in the sorted dataset, which is the poster that has been assigned the highest brightness value. Remember that Python starts counting at zero. The zero in the first line corresponds to the first row of the data.</p>
+<p>Feel free to look at other particularly bright rows to get a fuller picture of what is being captured by the annotation.</p>
+<div id="09e40d5d" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[<span class="dv">0</span>].path)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-17-output-1.png" width="303" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It’s similarly useful to look at the darkest images in the dataset. To do that we modify the code to start at the number of rows in the data minus one (again, because of Python’s convention of starting to count at zero). You can change the minus 1 to minus n to look at the n’th least bright image in the data.</p>
+<div id="d805b286" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[posters.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span>].path)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-18-output-1.png" width="293" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After looking at some example posters, how do you feel about the annotation’s ability to capture poster brightness? At least at the extremes, what feature(s) of the poster seem to best explain/predict the brightness of the image?</p>
+<p>Now that we have some understanding of how the annotation works, and hopefully some confidence that it corresponds with some meaningful quantity, let’s do some aggregative analysis with the annotations. In the code below we group out dataset by <code>period</code> (half-decades from 1970 through 2019) and look at the mean average brightness of all posters from that period.</p>
+<div id="2be786be" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>posters.groupby([<span class="st">'period'</span>])[<span class="st">'avg_brightness'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>period
+1970-1974    0.575523
+1975-1979    0.525609
+1980-1984    0.471467
+1985-1989    0.443442
+1990-1994    0.408656
+1995-1999    0.373039
+2000-2004    0.417602
+2005-2009    0.434809
+2010-2014    0.393544
+2015-2019    0.409779
+Name: avg_brightness, dtype: float64</code></pre>
+</div>
+</div>
+<p>How would you characterize the pattern here? Is there a meaningful pattern? If so, do you have any hypotheses about what might be behind them?</p>
+<p>Let’s do a similar analysis using the genres associated with each film. To do this, we first use the function <code>pd.merge</code> to combine our posters data with the genres table.</p>
+<div id="d7cb5d05" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.merge(posters, genre, on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'title'</span>])</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">path</th>
+<th data-quarto-table-cell-role="th">period</th>
+<th data-quarto-table-cell-role="th">avg_brightness</th>
+<th data-quarto-table-cell-role="th">genre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1999</td>
+<td>My Favorite Martian</td>
+<td>thm/1999_my_favorite_martian.jpg</td>
+<td>1995-1999</td>
+<td>0.959253</td>
+<td>Comedy</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1999</td>
+<td>My Favorite Martian</td>
+<td>thm/1999_my_favorite_martian.jpg</td>
+<td>1995-1999</td>
+<td>0.959253</td>
+<td>Family</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1999</td>
+<td>My Favorite Martian</td>
+<td>thm/1999_my_favorite_martian.jpg</td>
+<td>1995-1999</td>
+<td>0.959253</td>
+<td>Sci-Fi</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2015</td>
+<td>Steve Jobs</td>
+<td>thm/2015_steve_jobs.jpg</td>
+<td>2015-2019</td>
+<td>0.957483</td>
+<td>Biography</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2015</td>
+<td>Steve Jobs</td>
+<td>thm/2015_steve_jobs.jpg</td>
+<td>2015-2019</td>
+<td>0.957483</td>
+<td>Drama</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11075</td>
+<td>1992</td>
+<td>Consenting Adults</td>
+<td>thm/1992_consenting_adults.jpg</td>
+<td>1990-1994</td>
+<td>0.034447</td>
+<td>Mystery</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11076</td>
+<td>2006</td>
+<td>Saw III</td>
+<td>thm/2006_saw_iii.jpg</td>
+<td>2005-2009</td>
+<td>0.033579</td>
+<td>Horror</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11077</td>
+<td>2006</td>
+<td>Saw III</td>
+<td>thm/2006_saw_iii.jpg</td>
+<td>2005-2009</td>
+<td>0.033579</td>
+<td>Mystery</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11078</td>
+<td>2006</td>
+<td>Saw III</td>
+<td>thm/2006_saw_iii.jpg</td>
+<td>2005-2009</td>
+<td>0.033579</td>
+<td>Thriller</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11079</td>
+<td>1983</td>
+<td>Zelig</td>
+<td>thm/1983_zelig.jpg</td>
+<td>1980-1984</td>
+<td>0.030483</td>
+<td>Comedy</td>
+</tr>
+</tbody>
+</table>
+
+<p>11080 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<p>Then, we can repeate the analysis from the period data by grouping on genre and then taking the average brightness of each genre. Whereas it made sense to arrange the periods in chronological order to see a pattern, here it will be better to have Python arrange the genres by their mean average brightness. We do this with the <code>sort_values</code> method on the summarized data.</p>
+<div id="2ca10615" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'genre'</span>])[<span class="st">'avg_brightness'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>genre
+Horror       0.293290
+Mystery      0.309600
+Thriller     0.333107
+Sci-Fi       0.335817
+Action       0.368364
+Fantasy      0.396500
+Crime        0.406723
+Adventure    0.411667
+Biography    0.433424
+Drama        0.437968
+Animation    0.468851
+Family       0.489931
+Romance      0.521365
+Comedy       0.521993
+Name: avg_brightness, dtype: float64</code></pre>
+</div>
+</div>
+<p>What patterns do you notice in the genre codes here? Which seem to have the darkest posters and which seem to have the brightness ones? Can you summarize this pattern in any way? Any hypotheses about what is going on here?</p>
+</section>
+<section id="saturation-and-chroma" class="level2">
+<h2 class="anchored" data-anchor-id="saturation-and-chroma">Saturation and Chroma</h2>
+<p>We have already seen that if we do a careful analysis, we can do quite a bit of work with a relatively straightforward annotation based on image brightness. Our goal though is to understand the use of color more broadly in movie posters, which will require creating additional annotations that capture other aspects of poster color. One way to do this is to first convert the raw pixel intensities into an alternative color space.</p>
+<p>The RGB representation of pixels by the amount of red, green, and blue light needed to create the color at a specific point in space comes from the low-level engineering needs to image capture and display. As we have already seen, it is not a particularly meaningful way to think about our perception of color. Fortunately, there are other ways to represent color that more closely align with human perception and understanding. In order to understand how this works, let’s re-load the poster of the John Wayne movie <em>The Legend</em>.</p>
+<div id="f7d35ffc" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.path[<span class="dv">10</span>])</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-22-output-1.png" width="296" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Recall that above we located a specific pixel that corresponds to the burnt orange color in the poster. It has a RGB representation of the following:</p>
+<div id="49ab1009" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>img[<span class="dv">180</span>, <span class="dv">25</span>, :]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>array([189, 106,   0], dtype=uint8)</code></pre>
+</div>
+</div>
+<p>We can convert the RGB format into an HSV format using the <code>cvt2.cvtColor</code> function by specifying the type of color space transformation (<code>COLOR_RGB2HSV</code>) to use as a second argument. We will do some conversion of the scales of the output to convert them into a scale from 0 to 1, which will better match other sources as well as the longer discussion of this case study in Chapter 3 of <em>Distant Viewing</em>.</p>
+<div id="d1e3b87d" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_RGB2HSV)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> img_hsv.astype(np.float64)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">0</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">0</span>] <span class="op">/</span> <span class="fl">179.0</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">1</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">1</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">2</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">2</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>img_hsv.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>(229, 150, 3)</code></pre>
+</div>
+</div>
+<p>Notice that the shape of the output is exactly the same as the original image. The rows and columns still correspond to the same locations as the RGB model; it is only the triple of numbers at that location that have changed. Let’s see what our burnt orange pixel looks like now:</p>
+<div id="0ceb302b" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>img_hsv[<span class="dv">180</span>, <span class="dv">25</span>, :]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>array([0.09497207, 1.        , 0.74117647])</code></pre>
+</div>
+</div>
+<p>The first component is around <code>0.095</code>. This correspond to the <strong>hue</strong> of the pixel, with this number corresponding to the color orange. Hue is a bit complex and we will further investigate how it works in the next section. The second number is the <strong>saturation</strong>, which represents how rich the color is. A light pastel, such as a pale pink, will have a low saturation. Here, we see that the saturation is the maximum value of <code>1</code>. Finally, the value is an alternative representation of brightness, which here we see is equal to <code>0.74</code>.</p>
+<p>Let’s now focus on the saturation of the posters and do a similar analysis to the ones above with brightness. To more closely follow the analysis in the book, we will compute the related quantity called <strong>chroma</strong> instead of working with saturation directly. This can be computed by multiplying the saturation by the value. We used this quantity because it more closely aligns with the idea of the richness of color that we wanted to capture. For example, we see that the burnt orange color in our poster for <em>The Legend</em> has a saturation of <code>1</code>, but it’s chroma is only <code>0.74</code> (saturation times value). Only a “pure” orange color, like what you would see on a color wheel, would have a chroma of 1.</p>
+<p>Now, let’s cycle through the posters and add the average chroma value to each of them just as we did with the image brightness.</p>
+<div id="8e725429" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'avg_chroma'</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind <span class="kw">in</span> posters.index:</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.loc[ind, <span class="st">'path'</span>])</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  img_hsv <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_RGB2HSV)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  img_hsv <span class="op">=</span> img_hsv.astype(np.float64)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  img_hsv[:, :, <span class="dv">0</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">0</span>] <span class="op">/</span> <span class="fl">179.0</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  img_hsv[:, :, <span class="dv">1</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">1</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  img_hsv[:, :, <span class="dv">2</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">2</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'avg_chroma'</span>] <span class="op">=</span> np.mean(img_hsv[:, :, <span class="dv">1</span>] <span class="op">*</span> img_hsv[:, :, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And again we will arrange the posters data from the most to the least highest levels of chroma.</p>
+<div id="8829cc33" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>posters <span class="op">=</span> posters.sort_values(<span class="st">'avg_chroma'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>posters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">path</th>
+<th data-quarto-table-cell-role="th">period</th>
+<th data-quarto-table-cell-role="th">avg_brightness</th>
+<th data-quarto-table-cell-role="th">avg_chroma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3987</td>
+<td>2006</td>
+<td>The Omen</td>
+<td>thm/2006_the_omen.jpg</td>
+<td>2005-2009</td>
+<td>0.329209</td>
+<td>0.956298</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4061</td>
+<td>2007</td>
+<td>Daddy's Little Girls</td>
+<td>thm/2007_daddys_little_girls.jpg</td>
+<td>2005-2009</td>
+<td>0.558258</td>
+<td>0.931692</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">409</td>
+<td>1980</td>
+<td>The Shining</td>
+<td>thm/1980_the_shining.jpg</td>
+<td>1980-1984</td>
+<td>0.550869</td>
+<td>0.797270</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4556</td>
+<td>2017</td>
+<td>How to Be a Latin Lover</td>
+<td>thm/2017_how_to_be_a_latin_lover.jpg</td>
+<td>2015-2019</td>
+<td>0.480406</td>
+<td>0.768021</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3981</td>
+<td>2006</td>
+<td>Curious George</td>
+<td>thm/2006_curious_george.jpg</td>
+<td>2005-2009</td>
+<td>0.534758</td>
+<td>0.759104</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2502</td>
+<td>1973</td>
+<td>Psyched by the 4D Witch (A Tale of Demonology)</td>
+<td>thm/1973_psyched_by_the_d_witch_a_tale_of_demo...</td>
+<td>1970-1974</td>
+<td>0.760277</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2637</td>
+<td>1978</td>
+<td>The Adventures of the Jensen Boys</td>
+<td>thm/1978_the_adventures_of_the_jensen_boys.jpg</td>
+<td>1975-1979</td>
+<td>0.282204</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2473</td>
+<td>1972</td>
+<td>Peed Into the Wind</td>
+<td>thm/1972_peed_into_the_wind.jpg</td>
+<td>1970-1974</td>
+<td>0.594636</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">131</td>
+<td>1973</td>
+<td>Never Look Back</td>
+<td>thm/1973_never_look_back.jpg</td>
+<td>1970-1974</td>
+<td>0.661440</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2485</td>
+<td>1972</td>
+<td>The Only Way Home</td>
+<td>thm/1972_the_only_way_home.jpg</td>
+<td>1970-1974</td>
+<td>0.694055</td>
+<td>0.000000</td>
+</tr>
+</tbody>
+</table>
+
+<p>4680 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<p>Now, let’s once again look at some of the posters that correspond to extreme values. It is always an important step when working with new annotations to go back to the original images, and actually look at them to see how the numeric representation of the image corresponds to our own viewing and interpretation. As before, please feel free to experiment by looking at other posters with particularly high values.</p>
+<div id="533ffb01" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[<span class="dv">0</span>].path)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-28-output-1.png" width="304" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also do this with posters have the lowest average chroma. Many posters have an average chroma equal to zero. Can you think of what feature these all share in common before looking at the examples?</p>
+<div id="110a0a70" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[posters.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span>].path)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-29-output-1.png" width="297" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s see how the average chroma corresponds to the genres associated with each of the movie posters. Because there is such a shift in brightness from first twenty years of the data (a lot was in black and white), we will filter the data after merging in the genres to only include years from 1990 onwards.</p>
+<div id="e7dbdaf7" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.merge(posters, genre, on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'title'</span>])</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">"year"</span>] <span class="op">&gt;=</span> <span class="dv">1990</span>]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'genre'</span>])[<span class="st">'avg_chroma'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>genre
+Mystery      0.115066
+Horror       0.117193
+Thriller     0.134544
+Biography    0.136763
+Sci-Fi       0.152587
+Crime        0.153525
+Drama        0.154572
+Action       0.164537
+Romance      0.168240
+Fantasy      0.170068
+Comedy       0.199362
+Family       0.199996
+Adventure    0.204303
+Animation    0.275066
+Name: avg_chroma, dtype: float64</code></pre>
+</div>
+</div>
+<p>Take some time to look at the results. What patterns do you notice here? Does anything seem either (i) particularly surprising or (ii) particularly unsurprising? Both of these are useful observations for understanding the connection between the messages conveyed through the poster’s color and the associated genres.</p>
+</section>
+<section id="dominant-color" class="level2">
+<h2 class="anchored" data-anchor-id="dominant-color">Dominant Color</h2>
+<p>Having looked at the brightness/value and saturation/chroma of the posters, we now look to the third element of color, know as <strong>hue</strong>. To get started, let’s take a different example poster. Here, we will load the poster from the movie <em>Take the Lead</em> (2006), which has several different hues of color in it.</p>
+<div id="096b407d" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.path[<span class="dv">4016</span>])</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-31-output-1.png" width="304" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, let’s compute the HSV coordinates of this image just as we did in the previous section. Additionally, we will reshape the pixel data so that the array has one row for each pixel and only three columns. This is just some re-arranging to make the rest of the code easier to write and understand.</p>
+<div id="811cbc5c" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_RGB2HSV)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> img_hsv.astype(np.float64)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">0</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">0</span>] <span class="op">/</span> <span class="fl">179.0</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">1</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">1</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">2</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">2</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> img_hsv.reshape((<span class="op">-</span><span class="dv">1</span>, <span class="dv">3</span>), order <span class="op">=</span> <span class="st">"F"</span>)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>img_hsv.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>(33300, 3)</code></pre>
+</div>
+</div>
+<p>The hue is a number between 0 and 1 that indicate what we would colloqually call “color”. Unlike brightness, saturation, chroma, and value, these numbers are best thought of being arranged in a circle (see the associated slides for a visualization). A value of <code>0</code> corresponds with red, <code>.33</code> with green, <code>.5</code> with cyan, and <code>.66</code> with blue. Values close to 1 wrap back through purple and link back into red. So, the hues <code>0.01</code> and <code>0.99</code> are actually quite similar.</p>
+<p>To understand a bit better, let’s look at a histogram showing the distribution of the hues in the image. We need to be careful, though, because our interpretation of hue is only applicable when the chroma is sufficently large. If the chroma value is small, there is little color to show anyway and the differences between hues may be difficult or impossible to differentate. In the code below, we should the distribution of hues with a chroma above <code>0.3</code>.</p>
+<div id="ccc09289" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>plt.hist(img_hsv[img_hsv[:,<span class="dv">1</span>] <span class="op">*</span> img_hsv[:,<span class="dv">2</span>] <span class="op">&gt;</span> <span class="fl">0.3</span>, <span class="dv">0</span>], bins<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-33-output-1.png" width="583" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We should see a lot of values near <code>0.3</code>; these correspond to the green in the poster, which takes up a lot of space in the image. The peak near <code>0.66</code> is associated with the blue in the image, mainly on the silhouettes of the two characters on the poster. The smaller amount near one, and also wrapping around at 1, is the orange/red color in the title of the movie.</p>
+<p>Taking averages of hues does not in general provide meaningful summaries. For an extreme example, if we take the average of two shades of red that have hues of <code>0.99</code> and <code>0.01</code>, this would yield a hue of <code>0.5</code>, cyan, a color directly between green and blue. Alternatively, we can create an annotation of hue by breaking the range of hues up into standard color names and then count the proportion of each poster that corresponds with each color. To do this, we will load another dataset that we created with common cut-off values for each of the hues.</p>
+<div id="67be33dd" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>hue <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_hue.csv"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cnom</th>
+<th data-quarto-table-cell-role="th">start</th>
+<th data-quarto-table-cell-role="th">end</th>
+<th data-quarto-table-cell-role="th">mid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>red</td>
+<td>0.000000</td>
+<td>0.015625</td>
+<td>0.007812</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>orange</td>
+<td>0.015625</td>
+<td>0.109375</td>
+<td>0.062500</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>yellow</td>
+<td>0.109375</td>
+<td>0.203125</td>
+<td>0.156250</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>green</td>
+<td>0.203125</td>
+<td>0.453125</td>
+<td>0.328125</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>cyan</td>
+<td>0.453125</td>
+<td>0.546875</td>
+<td>0.500000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>blue</td>
+<td>0.546875</td>
+<td>0.765625</td>
+<td>0.656250</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>violet</td>
+<td>0.765625</td>
+<td>0.953125</td>
+<td>0.859375</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>red</td>
+<td>0.953125</td>
+<td>1.000000</td>
+<td>0.976562</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Next, we take the hues in <code>img_hsv</code> and count the numbes of pixels that are in each of these buckets after filtering for a sufficently high chroma to have a meaningful hue.</p>
+<div id="7528346e" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> np.append(<span class="dv">0</span>, hue.end.values)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>cnt, _ <span class="op">=</span> np.histogram(img_hsv[(img_hsv[:,<span class="dv">1</span>] <span class="op">*</span> img_hsv[:,<span class="dv">2</span>] <span class="op">&gt;</span> <span class="fl">0.3</span>), <span class="dv">0</span>], bins <span class="op">=</span> bins)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>cnt[<span class="dv">0</span>] <span class="op">=</span> cnt[<span class="dv">0</span>] <span class="op">+</span> cnt[<span class="dv">7</span>]</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>cnt <span class="op">=</span> cnt[:<span class="dv">7</span>]</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>cnt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<pre><code>array([  443,   764,   443, 14040,   692,  4974,    71])</code></pre>
+</div>
+</div>
+<p>There are a number of different ways to summarize these counts. We will create two annotations from them. First, we associate each poster with a dominant color corresponding to the hue name that is most strongly represented in the poster. This can be done with the following code. As we see, the code associates the <em>Take the Lead</em> poster with the color green as would be have expected from the histogram.</p>
+<div id="973e2963" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>hue.cnom.values[np.argmax(cnt)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>'green'</code></pre>
+</div>
+</div>
+<p>The other helpful quantity that we will save is the proportion of the entire poster that corresponds to this most dominant color. Using the code below, we see that that over 42% of this poster corresponds to hues which we have categorized as “green”.</p>
+<div id="3becd439" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>color_percent <span class="op">=</span> np.<span class="bu">max</span>(cnt) <span class="op">/</span> img_hsv.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>color_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>np.float64(42.16216216216216)</code></pre>
+</div>
+</div>
+<p>Now that we have seen how to do this with a single image, let’s cycle through all of the posters and compute the name of the dominant color and the percentage of the poster corresponding to each color for each of the posters.</p>
+<div id="2b4dba62" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'dom_color'</span>] <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'dom_color_percent'</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind <span class="kw">in</span> posters.index:</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.loc[ind, <span class="st">'path'</span>])</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  img_hsv <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_RGB2HSV)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  img_hsv <span class="op">=</span> img_hsv.astype(np.float64)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  img_hsv[:, :, <span class="dv">0</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">0</span>] <span class="op">/</span> <span class="fl">179.0</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  img_hsv[:, :, <span class="dv">1</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">1</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  img_hsv[:, :, <span class="dv">2</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">2</span>] <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  img_hsv <span class="op">=</span> img_hsv.reshape((<span class="op">-</span><span class="dv">1</span>, <span class="dv">3</span>), order <span class="op">=</span> <span class="st">"F"</span>)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  bins <span class="op">=</span> np.append(<span class="dv">0</span>, hue.end.values)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  cnt, _ <span class="op">=</span> np.histogram(img_hsv[(img_hsv[:,<span class="dv">1</span>] <span class="op">*</span> img_hsv[:,<span class="dv">2</span>] <span class="op">&gt;</span> <span class="fl">0.3</span>), <span class="dv">0</span>], bins <span class="op">=</span> bins)</span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  cnt[<span class="dv">0</span>] <span class="op">=</span> cnt[<span class="dv">0</span>] <span class="op">+</span> cnt[<span class="dv">7</span>]</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>  cnt <span class="op">=</span> cnt[:<span class="dv">7</span>]</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'dom_color'</span>] <span class="op">=</span> hue.cnom.values[np.argmax(cnt)]</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'dom_color_percent'</span>] <span class="op">=</span> color_percent <span class="op">=</span> np.<span class="bu">max</span>(cnt) <span class="op">/</span> img_hsv.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As with the other two annotations, we can start by looking at the the posters the have the most amount of dominant color for each given hue. Here, for example is the code to show the image with the largest amount of blue. Try to change the code to see other colors such as “red”, “yellow”, and “green”.</p>
+<div id="7a50814f" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters[posters.dom_color <span class="op">==</span> <span class="st">"blue"</span>].sort_values(</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'dom_color'</span>, ascending<span class="op">=</span><span class="va">False</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>).iloc[<span class="dv">0</span>].path)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-39-output-1.png" width="300" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, let’s do some analysis with these annotations. We will join the genre data back into the annotations and, as before, filter to only films from 1990 onwards. We will also only consider posters that have at least 5% of whatever the selected dominant color is.</p>
+<div id="0bfdbed7" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.merge(posters, genre, on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'title'</span>])</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">"year"</span>] <span class="op">&gt;=</span> <span class="dv">1990</span>]</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'dom_color_percent'</span>] <span class="op">&gt;</span> <span class="dv">5</span>]</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">path</th>
+<th data-quarto-table-cell-role="th">period</th>
+<th data-quarto-table-cell-role="th">avg_brightness</th>
+<th data-quarto-table-cell-role="th">avg_chroma</th>
+<th data-quarto-table-cell-role="th">dom_color</th>
+<th data-quarto-table-cell-role="th">dom_color_percent</th>
+<th data-quarto-table-cell-role="th">genre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2006</td>
+<td>The Omen</td>
+<td>thm/2006_the_omen.jpg</td>
+<td>2005-2009</td>
+<td>0.329209</td>
+<td>0.956298</td>
+<td>red</td>
+<td>98.228228</td>
+<td>Horror</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2006</td>
+<td>The Omen</td>
+<td>thm/2006_the_omen.jpg</td>
+<td>2005-2009</td>
+<td>0.329209</td>
+<td>0.956298</td>
+<td>red</td>
+<td>98.228228</td>
+<td>Thriller</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2007</td>
+<td>Daddy's Little Girls</td>
+<td>thm/2007_daddys_little_girls.jpg</td>
+<td>2005-2009</td>
+<td>0.558258</td>
+<td>0.931692</td>
+<td>yellow</td>
+<td>93.696697</td>
+<td>Drama</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2007</td>
+<td>Daddy's Little Girls</td>
+<td>thm/2007_daddys_little_girls.jpg</td>
+<td>2005-2009</td>
+<td>0.558258</td>
+<td>0.931692</td>
+<td>yellow</td>
+<td>93.696697</td>
+<td>Romance</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>2017</td>
+<td>How to Be a Latin Lover</td>
+<td>thm/2017_how_to_be_a_latin_lover.jpg</td>
+<td>2015-2019</td>
+<td>0.480406</td>
+<td>0.768021</td>
+<td>yellow</td>
+<td>63.965368</td>
+<td>Comedy</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9928</td>
+<td>2008</td>
+<td>Valkyrie</td>
+<td>thm/2008_valkyrie.jpg</td>
+<td>2005-2009</td>
+<td>0.627815</td>
+<td>0.045591</td>
+<td>red</td>
+<td>6.334752</td>
+<td>Drama</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9929</td>
+<td>2008</td>
+<td>Valkyrie</td>
+<td>thm/2008_valkyrie.jpg</td>
+<td>2005-2009</td>
+<td>0.627815</td>
+<td>0.045591</td>
+<td>red</td>
+<td>6.334752</td>
+<td>Thriller</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10068</td>
+<td>2002</td>
+<td>Catch Me If You Can</td>
+<td>thm/2002_catch_me_if_you_can.jpg</td>
+<td>2000-2004</td>
+<td>0.763134</td>
+<td>0.041342</td>
+<td>blue</td>
+<td>5.009009</td>
+<td>Biography</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10069</td>
+<td>2002</td>
+<td>Catch Me If You Can</td>
+<td>thm/2002_catch_me_if_you_can.jpg</td>
+<td>2000-2004</td>
+<td>0.763134</td>
+<td>0.041342</td>
+<td>blue</td>
+<td>5.009009</td>
+<td>Crime</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10070</td>
+<td>2002</td>
+<td>Catch Me If You Can</td>
+<td>thm/2002_catch_me_if_you_can.jpg</td>
+<td>2000-2004</td>
+<td>0.763134</td>
+<td>0.041342</td>
+<td>blue</td>
+<td>5.009009</td>
+<td>Drama</td>
+</tr>
+</tbody>
+</table>
+
+<p>5086 rows × 9 columns</p>
+</div>
+</div>
+</div>
+<p>Now, we can compute the proportion of posters from each genre that have red as a dominant color using the code below.</p>
+<div id="570bc90e" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'percent_color'</span>] <span class="op">=</span> (df[<span class="st">'dom_color'</span>] <span class="op">==</span> <span class="st">"red"</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'genre'</span>])[<span class="st">'percent_color'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<pre><code>genre
+Animation    0.061905
+Adventure    0.076106
+Biography    0.076923
+Romance      0.100543
+Fantasy      0.101604
+Comedy       0.117041
+Sci-Fi       0.134615
+Drama        0.134901
+Family       0.145228
+Action       0.169643
+Mystery      0.180328
+Crime        0.190202
+Thriller     0.223529
+Horror       0.264463
+Name: percent_color, dtype: float64</code></pre>
+</div>
+</div>
+<p>Do you see any interesting patterns in the data above? After looking closely, try to change the color of interest and see if any other patterns arise.</p>
+</section>
+<section id="face-detection" class="level2">
+<h2 class="anchored" data-anchor-id="face-detection">Face Detection</h2>
+<p>When introducing the ideas behind distant viewing and the computational analysis of large collections of digital images, we like to start with annotations that capture color. There’s a tangible connection between elements such as brightness, saturation, and hue that we can instantly connect to the way that digital images are created and stored. At the same time, color is not at all simple. In many ways, it is a particularly difficult annotation to work with because there are so many different ways to count, bucket, and summarize the results. Understanding the connection between the raw pixel intensites, the resulting annoations, and the semantic gap between the two is key to understanding the challenges and possibilites of working with collections of digital images, and distant viewing.</p>
+<p>Of course, many applications of distant viewing will want to integrate other kinds of annotations, many of which require using more advanced machine learning techniques such as neural networks and large language models. In this final section of analysis, we will show how to use a face detection model to add an additional annotation to our movie posters dataset using the distant viewing toolkit (<strong>dvt</strong>).</p>
+<p>The distant viewing toolkit simplifes the process of applying several common computer visional algorithms to still and moving images. Most of the difficult work of standardizing the inputs, downloading models, and getting all of the results into the same format is taken care of in dvt. All that we need to do is load the annotator that we are interested in, load the images of interest, and create the annotations by calling a specific method from each annotator. To start, we will use the code below to load and save a <code>AnnoFaces</code> object for detecting faces in images. The first time this function is called, Python will download the underlying model that does this processing.</p>
+<p>Why might we be interested in detecting faces in movie posters? Which questions could we ask?</p>
+<div id="d477da08" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>anno_face <span class="op">=</span> dvt.AnnoFaces()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/admin/gh/dvscripts/env/lib/python3.12/site-packages/dvt/face.py:38: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.mtcnn.load_state_dict(torch.load(model_path_mtcnn))
+/Users/admin/gh/dvscripts/env/lib/python3.12/site-packages/dvt/face.py:42: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.vggface.load_state_dict(torch.load(model_path_vggface))</code></pre>
+</div>
+</div>
+<p>In order to get good results from face detection, unlike the color analysis, we need to work with the full resolution version of the movie posters. We downloaded a full-size image for this purpose from the movie <em>Love Story</em>, the top-grossing film from 1970. Let’s read this image into Python using the function <code>load_image</code>. We can display this in the Colab notebook, noting that it is much larger and sharper than the thumbnails we were using previously.</p>
+<div id="0d019105" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">'data/love_story.jpg'</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-43-output-1.png" width="297" height="416" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In order to run the face detection annotator on the image, we use the <code>run</code> method of the annotator and provide the image that we have loaded as an argument to the function.</p>
+<div id="d31675df" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>out_face <span class="op">=</span> anno_face.run(img, visualize<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output of the annotation contains two objects. The first is the original image with boxes around the detected faces. This is useful for the qualatitive analysis and assessment of how well the algorithm works on our data. We see in this example that the algorithm has found the two faces present in the poster.</p>
+<div id="dbf4ff99" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_face[<span class="st">'img'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-45-output-1.png" width="297" height="416" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A structured data version of the detected faces is provided in the object named <code>boxes</code>. It can be turned into a data frame with the <code>pd.DataFrame</code> function. Here, we see that it tells us the pixel coordinates (from the upper-left hand corner) of the detected faces along with a probability score, which tells us how confident the prediction is that there is actually a face in the given location.</p>
+<div id="bbf74cba" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(out_face[<span class="st">'boxes'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">face_id</th>
+<th data-quarto-table-cell-role="th">x</th>
+<th data-quarto-table-cell-role="th">xend</th>
+<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">yend</th>
+<th data-quarto-table-cell-role="th">prob</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>95</td>
+<td>211</td>
+<td>55</td>
+<td>209</td>
+<td>0.999969</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>163</td>
+<td>259</td>
+<td>162</td>
+<td>287</td>
+<td>0.999953</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>So, as with the color annotations, the next step is to run this annotation over all of the posters and collect the results. The model for face detection is quite a bit slower than the color annotators and requires the larger version of the movie poster data. If we were to have the full images instead of the thumbnails the following code (with the hash signs removed from the start of the lines, which we added here to ensure that we do not accidentally run the code) would create the desired dataset.</p>
+<div id="c0b4463a" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">#output = []</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co">#for idx, ip in enumerate(posters.index):</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  path = posters.loc[ind, 'path']</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  img = dvt.load_image("data/" + path)</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  out_face = anno_face.run(img, visualize=False)</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  if 'boxes' in out_face:</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    df = pd.DataFrame(out_face['boxes'])</span></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    df['path'] = path</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    output.append(df)</span></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="co">#faces = pd.concat(output)</span></span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a><span class="co">#faces = pd.merge(faces, meta)</span></span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a><span class="co">#faces = faces[['year', 'title', 'face_id', 'x', 'xend', 'y', 'yend', 'prob']]</span></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a><span class="co">#faces.to_csv("data/movies_50_years_face.csv", index=False)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Given the time and data constraints, we have provided a version of the annotated faces that we can read directly into Python as a CSV file. Note that it is very similar to output directly from the <code>AnnoFaces</code> object, just with the year and title of the movie added as the first two columns.</p>
+<div id="13495011" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>faces <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_face.csv"</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>faces</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">face_id</th>
+<th data-quarto-table-cell-role="th">x</th>
+<th data-quarto-table-cell-role="th">xend</th>
+<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">yend</th>
+<th data-quarto-table-cell-role="th">prob</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1970</td>
+<td>Love Story</td>
+<td>0</td>
+<td>95</td>
+<td>211</td>
+<td>55</td>
+<td>209</td>
+<td>0.999969</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1970</td>
+<td>Love Story</td>
+<td>1</td>
+<td>163</td>
+<td>259</td>
+<td>162</td>
+<td>287</td>
+<td>0.999953</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1970</td>
+<td>Airport</td>
+<td>0</td>
+<td>423</td>
+<td>458</td>
+<td>521</td>
+<td>566</td>
+<td>0.999998</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1970</td>
+<td>Airport</td>
+<td>1</td>
+<td>420</td>
+<td>460</td>
+<td>311</td>
+<td>363</td>
+<td>0.999976</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1970</td>
+<td>Airport</td>
+<td>2</td>
+<td>423</td>
+<td>458</td>
+<td>249</td>
+<td>295</td>
+<td>0.999964</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">13139</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>2</td>
+<td>932</td>
+<td>1072</td>
+<td>1539</td>
+<td>1721</td>
+<td>0.980665</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13140</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>3</td>
+<td>936</td>
+<td>1083</td>
+<td>476</td>
+<td>687</td>
+<td>0.960602</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">13141</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>4</td>
+<td>271</td>
+<td>421</td>
+<td>1519</td>
+<td>1725</td>
+<td>0.922275</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13142</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>5</td>
+<td>514</td>
+<td>528</td>
+<td>760</td>
+<td>777</td>
+<td>0.888940</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">13143</td>
+<td>2019</td>
+<td>The Kid</td>
+<td>6</td>
+<td>615</td>
+<td>664</td>
+<td>527</td>
+<td>589</td>
+<td>0.731668</td>
+</tr>
+</tbody>
+</table>
+
+<p>13144 rows × 8 columns</p>
+</div>
+</div>
+</div>
+<p>The annotations above provide one row for each detected face in one of the movie posters. In order to analyze these annotations, we need to aggregate them so that we have a single summary value for each poster. One way to do that is to filter the faces to only those above a threshold probability score and then count how many faces are present in each poster. Then, we can add this count back into the posters table. We need to be careful about doing this so as to make sure that we are not missing the posters that have zero faces. The sequence of pandas functions below puts all of these steps together, as well as joining to the genre table, which we will use shortly. We usually pick a pretty high threshold (.95 in this case) given our experience with face detection algorithms and knowing this data.</p>
+<div id="95521f17" class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> faces[faces[<span class="st">'prob'</span>] <span class="op">&gt;</span> <span class="fl">0.95</span>][[<span class="st">'year'</span>, <span class="st">'title'</span>]].value_counts().reset_index(name<span class="op">=</span><span class="st">'num_face'</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> pd.merge(posters, face_cnt, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> pd.merge(face_cnt, genre)</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>face_cnt[<span class="st">'num_face'</span>] <span class="op">=</span> face_cnt[<span class="st">'num_face'</span>].fillna(<span class="dv">0</span>)</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> face_cnt.sort_values(<span class="st">'num_face'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>face_cnt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="48">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">path</th>
+<th data-quarto-table-cell-role="th">period</th>
+<th data-quarto-table-cell-role="th">avg_brightness</th>
+<th data-quarto-table-cell-role="th">avg_chroma</th>
+<th data-quarto-table-cell-role="th">dom_color</th>
+<th data-quarto-table-cell-role="th">dom_color_percent</th>
+<th data-quarto-table-cell-role="th">num_face</th>
+<th data-quarto-table-cell-role="th">genre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4359</td>
+<td>1999</td>
+<td>Being John Malkovich</td>
+<td>thm/1999_being_john_malkovich.jpg</td>
+<td>1995-1999</td>
+<td>0.390828</td>
+<td>0.167236</td>
+<td>orange</td>
+<td>7.649452</td>
+<td>107.0</td>
+<td>Drama</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4358</td>
+<td>1999</td>
+<td>Being John Malkovich</td>
+<td>thm/1999_being_john_malkovich.jpg</td>
+<td>1995-1999</td>
+<td>0.390828</td>
+<td>0.167236</td>
+<td>orange</td>
+<td>7.649452</td>
+<td>107.0</td>
+<td>Comedy</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4360</td>
+<td>1999</td>
+<td>Being John Malkovich</td>
+<td>thm/1999_being_john_malkovich.jpg</td>
+<td>1995-1999</td>
+<td>0.390828</td>
+<td>0.167236</td>
+<td>orange</td>
+<td>7.649452</td>
+<td>107.0</td>
+<td>Fantasy</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2488</td>
+<td>2009</td>
+<td>500 Days of Summer</td>
+<td>thm/2009__days_of_summer.jpg</td>
+<td>2005-2009</td>
+<td>0.687005</td>
+<td>0.231621</td>
+<td>blue</td>
+<td>17.269841</td>
+<td>101.0</td>
+<td>Romance</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2486</td>
+<td>2009</td>
+<td>500 Days of Summer</td>
+<td>thm/2009__days_of_summer.jpg</td>
+<td>2005-2009</td>
+<td>0.687005</td>
+<td>0.231621</td>
+<td>blue</td>
+<td>17.269841</td>
+<td>101.0</td>
+<td>Comedy</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3196</td>
+<td>2016</td>
+<td>The Secret Life of Pets</td>
+<td>thm/2016_the_secret_life_of_pets.jpg</td>
+<td>2015-2019</td>
+<td>0.518787</td>
+<td>0.203276</td>
+<td>blue</td>
+<td>14.910364</td>
+<td>0.0</td>
+<td>Comedy</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3195</td>
+<td>2016</td>
+<td>The Secret Life of Pets</td>
+<td>thm/2016_the_secret_life_of_pets.jpg</td>
+<td>2015-2019</td>
+<td>0.518787</td>
+<td>0.203276</td>
+<td>blue</td>
+<td>14.910364</td>
+<td>0.0</td>
+<td>Adventure</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3194</td>
+<td>2016</td>
+<td>The Secret Life of Pets</td>
+<td>thm/2016_the_secret_life_of_pets.jpg</td>
+<td>2015-2019</td>
+<td>0.518787</td>
+<td>0.203276</td>
+<td>blue</td>
+<td>14.910364</td>
+<td>0.0</td>
+<td>Animation</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3190</td>
+<td>2004</td>
+<td>The Alamo</td>
+<td>thm/2004_the_alamo.jpg</td>
+<td>2000-2004</td>
+<td>0.315891</td>
+<td>0.203356</td>
+<td>orange</td>
+<td>23.945946</td>
+<td>0.0</td>
+<td>Drama</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2006</td>
+<td>The Omen</td>
+<td>thm/2006_the_omen.jpg</td>
+<td>2005-2009</td>
+<td>0.329209</td>
+<td>0.956298</td>
+<td>red</td>
+<td>98.228228</td>
+<td>0.0</td>
+<td>Horror</td>
+</tr>
+</tbody>
+</table>
+
+<p>11080 rows × 10 columns</p>
+</div>
+</div>
+</div>
+<p>As we have done with the color annotations, it is a good idea to look at some of the results. The table above shows that the poster for the 1999 film <em>Being John Malkovich</em> has a total of 107 faces. This may seem like an error, but let’s look at the movie poster to check.</p>
+<div id="ca8cf1da" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> face_cnt.iloc[<span class="dv">0</span>].path)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial-digital-images_files/figure-html/cell-50-output-1.png" width="314" height="415" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So, in fact, it does seem like having a hundred detected faces is reasonable after looking at the poster. It’s hard to confirm that the exact number is correct (it’s almost certainly not), but at least we feel good that the algorithm is doing something reasonable. Feel free to try some other poster values and see if they also have a large number of faces. In a full analysis, it would be a good idea to go through and check how many of the detected faces were correctly located, but for now we will take these qualitative results as a good starting point and move on to a final analysis.</p>
+<p>Let’s start by seeing if there are any temporal patterns in the average number of faces present in each of the posters.</p>
+<div id="5abf59a2" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>posters.groupby([<span class="st">'period'</span>])[<span class="st">'avg_brightness'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>period
+1970-1974    0.575523
+1975-1979    0.525609
+1980-1984    0.471467
+1985-1989    0.443442
+1990-1994    0.408656
+1995-1999    0.373039
+2000-2004    0.417602
+2005-2009    0.434809
+2010-2014    0.393544
+2015-2019    0.409779
+Name: avg_brightness, dtype: float64</code></pre>
+</div>
+</div>
+<p>What pattern(s) arise in the number of faces on the posters? Can you think of any reason that there might be more faces on average during the 1970s compared to more recent decades?</p>
+<p>As with the color-based annotations, we can take the mean value of these counts by genre and see if there are any interesting patterns.</p>
+<div id="3ebb147f" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>face_cnt.groupby([<span class="st">'genre'</span>])[<span class="st">'num_face'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<pre><code>genre
+Horror       1.037895
+Animation    1.044776
+Mystery      1.467192
+Sci-Fi       1.562005
+Biography    1.598086
+Thriller     1.617143
+Adventure    2.064516
+Crime        2.126492
+Action       2.141925
+Drama        2.202097
+Family       2.357868
+Fantasy      2.380597
+Romance      2.710419
+Comedy       2.951996
+Name: num_face, dtype: float64</code></pre>
+</div>
+</div>
+<p>Take a few minutes to look at the table. Do you see any consistent patterns? Can you think of any hypotheses about what might be causing these? Can you think of any cautions that might provide any caveats to the analysis of the face detection algorithm?</p>
+<p>As we saw above, there are several posters that have a very large number of faces. It might be enlightening to look at the median number of faces by genre in addition to the average number.</p>
+<div id="2643c311" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>face_cnt.groupby([<span class="st">'genre'</span>])[<span class="st">'num_face'</span>].median().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>genre
+Animation    0.0
+Horror       0.0
+Action       1.0
+Adventure    1.0
+Biography    1.0
+Drama        1.0
+Fantasy      1.0
+Mystery      1.0
+Sci-Fi       1.0
+Thriller     1.0
+Comedy       2.0
+Crime        2.0
+Family       2.0
+Romance      2.0
+Name: num_face, dtype: float64</code></pre>
+</div>
+</div>
+<p>How do the median values compare to the average values? Do they help tell a story about faces that are present in the poster?</p>
+<p>As a final analysis, to show the many different ways that we can analyze the same annotations, we will compute the proportion of posters that have at least one face on them and summarize by genre.</p>
+<div id="78e56362" class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>face_cnt[<span class="st">'face_present'</span>] <span class="op">=</span> (face_cnt[<span class="st">'num_face'</span>] <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>face_cnt.groupby([<span class="st">'genre'</span>])[<span class="st">'face_present'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>genre
+Animation    0.406716
+Horror       0.418947
+Sci-Fi       0.567282
+Mystery      0.574803
+Adventure    0.639113
+Thriller     0.664286
+Biography    0.669856
+Family       0.690355
+Fantasy      0.703980
+Action       0.738989
+Drama        0.746425
+Crime        0.821002
+Comedy       0.831733
+Romance      0.875507
+Name: face_present, dtype: float64</code></pre>
+</div>
+</div>
+<p>Do these results help add any nuance to the previous results? What kinds of questions could we pose by putting them together?</p>
+<p>In the book, we decided to focus on one type of annotation in each chapter. Chapter 3 analyzed color and movie posters, while Chapter 5 on <em>Bewitched</em> and <em>I Dream of Jeannie</em> relied on face detection to look at charachters on screen. Here, we expand on the book to begin to demonstrate how layering types of annotations begins to add new areas of exploration and to nuance our computaitonal analysis of images.</p>
+</section>
+<section id="conclusions-and-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions-and-next-steps">Conclusions and Next Steps</h2>
+<p>The tutorial has covered a lot of material. We’ve introduced the basics of running Python and an understanding of how digital images are represented as arrays of pixel intensites. From there, we motived the theoretical stakes of distant viewing. Then, we put this into practice by generating increasingly complex annotations based on our understanding of color and, finally, by using a neural-network based machine learning algorithm to detected faces present in each of the movie posters. Throughout, we have tried to connect each of our analyess back to research questions regarding the visual cultures around movie posters across different genres over a 50-year period.</p>
+<p>There are many directions to explore after following this notebook. If you want to see how to complete the analysis presented here, including the important steps of connecting our observations to existing archival and scholarly sources, we suggest checking out Chapter 3 of our <em>Distant Viewing</em> book. A link is available at the top of this notebook. If you are new to programming, learning a <a href="https://wiki.python.org/moin/BeginnersGuide">bit more Python</a> from core principles is a good start. If your interests including moving images, we have a follow-up notebook that works through an example using a set of U.S. television shows from the 1960s and 1970s. Otherwise, we suggest checking out the other annotations available in the <a href="https://github.com/distant-viewing/dvt">distant viewing toolkit</a> and applying them to your own collections.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./tutorials.html" class="pagination-link" aria-label="Tutorials">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Tutorials</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./tutorial-moving-images.html" class="pagination-link" aria-label="1.2 Tutorial II: Moving Images">
+        <span class="nav-page-text">1.2 Tutorial II: Moving Images</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Distant Viewing Scripts</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
