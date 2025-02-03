@@ -14,37 +14,37 @@ book:
   chapters:
     - index.qmd
 
-    - part: 00_tutorials.qmd
+    - part: tutorials.qmd
       chapters:
-        - 1.1_tutorial1.qmd
-        - 1.2_tutorial2.qmd
+        - tutorial-digital-images.qmd
+        - tutorial-moving-images.qmd
 
-    - part: 00_image.qmd
+    - part: image.qmd
       chapters:
-        - 2.1_color.qmd
-        - 2.2_classification.qmd
-        - 2.3_object.qmd
-        - 2.4_depth.qmd
-        - 2.5_segment.qmd
-        - 2.6_embed.qmd
+        - color.qmd
+        - classification.qmd
+        - object.qmd
+        - depth.qmd
+        - segment.qmd
+        - embed.qmd
 
-    - part: 00_video.qmd
+    - part: video.qmd
       chapters:
-        - 3.1_shot.qmd
-        - 3.2_transcription.qmd
-        - 3.3_diarization.qmd
+        - shot.qmd
+        - transcription.qmd
+        - diarization.qmd
 
-    - part: 00_text.qmd
+    - part: text.qmd
       chapters:
-        - 4.1_sentiment.qmd
-        - 4.2_review.qmd
-        - 4.3_comment.qmd
-        - 4.4_mask.qmd
+        - sentiment.qmd
+        - review.qmd
+        - comment.qmd
+        - mask.qmd
 
-    - part: 00_multimodal.qmd
+    - part: multimodal.qmd
       chapters:
-        - 5.1_zeroshot.qmd
-        - 5.2_caption.qmd
+        - zeroshot.qmd
+        - caption.qmd
 
     - citation.qmd
     - references.qmd

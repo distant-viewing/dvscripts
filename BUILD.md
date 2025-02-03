@@ -17,6 +17,14 @@ pip freeze > requirements.txt
 export PYTORCH_ENABLE_MPS_FALLBACK=1
 ```
 
+To rebuild do the following :
+
+```
+python3.12 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
 To build the R environment
 
 ```{r}

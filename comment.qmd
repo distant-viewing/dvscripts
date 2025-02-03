@@ -1,4 +1,4 @@
-# 4.3 Comment Prediction {.unnumbered}
+# 4.3 Comment Prediction {.unnumbered comment}
 
 This is a minimal example script showing how to do toxicity
 detection using a set of short texts stored on
