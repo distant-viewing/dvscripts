@@ -1,4 +1,4 @@
-# 2.1 Color + Complexity {.unnumbered}
+# 2.2 Color {.unnumbered}
 
 To learn more about the use of color and complexity
-in image analysis, see the tutorial in section 1.1.
+in image analysis, see the tutorial in Section 1.1.

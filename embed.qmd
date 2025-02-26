@@ -1,4 +1,4 @@
-# 2.6 Embedding {.unnumbered}
+# 2.7 Embedding {.unnumbered}
 
 This is a minimal example script showing how to do an image 
 embedding using a set of images that are stored on

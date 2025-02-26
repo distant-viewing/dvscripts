@@ -21,6 +21,7 @@ book:
 
     - part: image.qmd
       chapters:
+        - metrics.qmd
         - color.qmd
         - classification.qmd
         - object.qmd

@@ -8,7 +8,7 @@
 
 <meta name="author" content="Taylor Arnold and Lauren Tilton">
 
-<title>2.4 Depth Estimation – Distant Viewing Scripts</title>
+<title>2.5 Depth Estimation – Distant Viewing Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./depth.html">2.4 Depth Estimation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./depth.html">2.5 Depth Estimation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -188,38 +188,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./metrics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Metrics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./color.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.1 Color + Complexity</span></a>
+ <span class="menu-text">2.2 Color</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.2 Image Classification</span></a>
+ <span class="menu-text">2.3 Image Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./object.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.3 Object Detection</span></a>
+ <span class="menu-text">2.4 Object Detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./depth.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">2.4 Depth Estimation</span></a>
+ <span class="menu-text">2.5 Depth Estimation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./segment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.5 Image Segmentation</span></a>
+ <span class="menu-text">2.6 Image Segmentation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./embed.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.6 Embedding</span></a>
+ <span class="menu-text">2.7 Embedding</span></a>
   </div>
 </li>
       </ul>
@@ -334,9 +340,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./depth.html">2.4 Depth Estimation</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./depth.html">2.5 Depth Estimation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">2.4 Depth Estimation</h1>
+<h1 class="title">2.5 Depth Estimation</h1>
 </div>
 
 
@@ -354,7 +360,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is a minimal example script showing how to do depth estimation using a set of images that are stored on the same machine where we are running the models. To start, we will load in a few modules that will be needed for the task.</p>
-<div id="11921493" class="cell" data-execution_count="1">
+<div id="921576ec" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os <span class="im">import</span> listdir</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os.path <span class="im">import</span> splitext, join</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
@@ -365,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we load the model that we are interested in using.</p>
-<div id="dafc54fc" class="cell" data-execution_count="2">
+<div id="9f5204be" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> pipeline(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  task<span class="op">=</span><span class="st">"depth-estimation"</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  model<span class="op">=</span><span class="st">"LiheYoung/depth-anything-small-hf"</span></span>
@@ -376,7 +382,7 @@ Device set to use mps:0</code></pre>
 </div>
 </div>
 <p>With the models loaded, the next step is to build a set of paths to the images that we are interested in using. Here, we will create a list of all of the image files in the directory containing the FSA-OWI images. Then, to save time, we take just the first five images to work with. We could run over all of the images or use a different collection by changing the variables below.</p>
-<div id="492af931" class="cell" data-execution_count="3">
+<div id="1cde6e81" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>collection <span class="op">=</span> <span class="st">'fsaowi'</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>num_images <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -385,7 +391,7 @@ Device set to use mps:0</code></pre>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> paths[:num_images]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we will load each of the images and run the model over it. The output of the depth prediction algorithm is another image with the same height and width of the input. The values in the image range from 0 (farther point from the camera) to 255 (closest point to the camera). We can save the full output to visualize while also producing structured data about the detected depth. As an example, below we store the percentage of the image that is in the foreground (using the cutoff value of 192) and the percentage in the background (using the cutoff value of 64). We also store the brightness of the foreground and background. The cutoff values are just heuristics we use here. Test and explore what works for your applications.</p>
-<div id="7bdd59e6" class="cell" data-execution_count="4">
+<div id="4f3d3fc8" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>output_image <span class="op">=</span> {}</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> {</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">'path'</span>: [],</span>
@@ -414,7 +420,7 @@ Device set to use mps:0</code></pre>
 </div>
 </div>
 <p>We can convert the structured outputs that we have produced above into a data frame to save and explore further.</p>
-<div id="faee4af7" class="cell" data-execution_count="5">
+<div id="a5019a63" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> pl.from_dict(output)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -485,7 +491,7 @@ Device set to use mps:0</code></pre>
 </div>
 </div>
 <p>And, to visualize the output, print the full image outputs themselves. They will show the depth of each pixel as a range from black (farthest back) to white (closest to the camera).</p>
-<div id="150cc0d0" class="cell" data-execution_count="6">
+<div id="f283640e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> path <span class="kw">in</span> paths:</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    display(output_image[path])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -947,13 +953,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./object.html" class="pagination-link" aria-label="2.3 Object Detection">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2.3 Object Detection</span>
+      <a href="./object.html" class="pagination-link" aria-label="2.4 Object Detection">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2.4 Object Detection</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./segment.html" class="pagination-link" aria-label="2.5 Image Segmentation">
-        <span class="nav-page-text">2.5 Image Segmentation</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./segment.html" class="pagination-link" aria-label="2.6 Image Segmentation">
+        <span class="nav-page-text">2.6 Image Segmentation</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

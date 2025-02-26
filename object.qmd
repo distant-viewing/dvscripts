@@ -1,4 +1,4 @@
-# 2.3 Object Detection {.unnumbered}
+# 2.4 Object Detection {.unnumbered}
 
 This is a minimal example script showing how to do object detection
 using a set of images that are stored on

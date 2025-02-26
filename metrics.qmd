@@ -1,0 +1,4 @@
+# 2.1 Metrics {.unnumbered}
+
+To learn more about the use of brightness, color, and
+complexity in image analysis, see the tutorial in Section 1.1.

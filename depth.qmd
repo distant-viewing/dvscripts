@@ -1,4 +1,4 @@
-# 2.4 Depth Estimation {.unnumbered}
+# 2.5 Depth Estimation {.unnumbered}
 
 This is a minimal example script showing how to do depth estimation
 using a set of images that are stored on the same machine where we

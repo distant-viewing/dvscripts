@@ -8,7 +8,7 @@
 
 <meta name="author" content="Taylor Arnold and Lauren Tilton">
 
-<title>2.2 Image Classification – Distant Viewing Scripts</title>
+<title>2.3 Image Classification – Distant Viewing Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./classification.html">2.2 Image Classification</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./classification.html">2.3 Image Classification</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -188,38 +188,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./metrics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Metrics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./color.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.1 Color + Complexity</span></a>
+ <span class="menu-text">2.2 Color</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./classification.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">2.2 Image Classification</span></a>
+ <span class="menu-text">2.3 Image Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./object.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.3 Object Detection</span></a>
+ <span class="menu-text">2.4 Object Detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./depth.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.4 Depth Estimation</span></a>
+ <span class="menu-text">2.5 Depth Estimation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./segment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.5 Image Segmentation</span></a>
+ <span class="menu-text">2.6 Image Segmentation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./embed.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.6 Embedding</span></a>
+ <span class="menu-text">2.7 Embedding</span></a>
   </div>
 </li>
       </ul>
@@ -334,9 +340,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./classification.html">2.2 Image Classification</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./classification.html">2.3 Image Classification</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">2.2 Image Classification</h1>
+<h1 class="title">2.3 Image Classification</h1>
 </div>
 
 
@@ -354,7 +360,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is a minimal example script showing how to do image classification using a set of images that are stored on the same machine where we are running the models. To start, we will load in a few modules that will be needed for the task.</p>
-<div id="988eacd3" class="cell" data-execution_count="1">
+<div id="f57fc600" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os <span class="im">import</span> listdir</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os.path <span class="im">import</span> splitext, join</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoImageProcessor, ResNetForImageClassification</span>
@@ -364,7 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we load the model that we are interested in using. There are a large number of image classification algorithms on HuggingFace; most can be used exactly the same way by simply changing the name of the model in the function calls below.</p>
-<div id="4c5de9ba" class="cell" data-execution_count="2">
+<div id="5cf20c65" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>image_processor <span class="op">=</span> AutoImageProcessor.from_pretrained(<span class="st">"microsoft/resnet-50"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ResNetForImageClassification.from_pretrained(<span class="st">"microsoft/resnet-50"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -372,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>With the models loaded, the next step is to build a set of paths to the images that we are interested in using. Here, we will create a list of all of the image files in the directory containing the FSA-OWI images. Then, to save time, we take just the first five images to work with. We could run over all of the images or use a different collection by changing the variables below.</p>
-<div id="527f9e70" class="cell" data-execution_count="3">
+<div id="54c88ccc" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>collection <span class="op">=</span> <span class="st">'fsaowi'</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>num_images <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -381,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> paths[:num_images]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we will load each of the images and run the model over it. For each output, we save the top 10 predictions, with both their names and probabilties.</p>
-<div id="1142fd19" class="cell" data-execution_count="4">
+<div id="badcf477" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> {<span class="st">'path'</span>: [], <span class="st">'label'</span>: [], <span class="st">'prob'</span>: []}</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> path <span class="kw">in</span> paths:</span>
@@ -401,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    output[<span class="st">'prob'</span>] <span class="op">+=</span> prob</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output is constructed such that we can call the <code>from_dict</code> method from <strong>polars</strong> to construct a data frame. If needed, this can be saved as a CSV file with the <code>write_csv</code> method of the resulting data frame.</p>
-<div id="f96c7574" class="cell" data-execution_count="5">
+<div id="92024195" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> pl.from_dict(output)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -488,7 +494,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Finally, we can visualize the results using the following code:</p>
-<div id="255952e4" class="cell" data-execution_count="6">
+<div id="145f7f41" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> path <span class="kw">in</span> paths:</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> Image.<span class="bu">open</span>(join(<span class="st">'img'</span>, collection, path))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> image.convert(<span class="st">'RGB'</span>)</span>
@@ -973,13 +979,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./color.html" class="pagination-link" aria-label="2.1 Color + Complexity">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2.1 Color + Complexity</span>
+      <a href="./color.html" class="pagination-link" aria-label="2.2 Color">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2.2 Color</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./object.html" class="pagination-link" aria-label="2.3 Object Detection">
-        <span class="nav-page-text">2.3 Object Detection</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./object.html" class="pagination-link" aria-label="2.4 Object Detection">
+        <span class="nav-page-text">2.4 Object Detection</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

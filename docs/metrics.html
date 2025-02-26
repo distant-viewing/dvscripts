@@ -8,7 +8,7 @@
 
 <meta name="author" content="Taylor Arnold and Lauren Tilton">
 
-<title>Video + Audio – Distant Viewing Scripts</title>
+<title>2.1 Metrics – Distant Viewing Scripts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +31,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./shot.html" rel="next">
-<link href="./embed.html" rel="prev">
+<link href="./color.html" rel="next">
+<link href="./image.html" rel="prev">
 <link href="./img/dlogo.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./video.html">Video + Audio</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./metrics.html">2.1 Metrics</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -151,7 +151,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./metrics.html" class="sidebar-item-text sidebar-link">
+  <a href="./metrics.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">2.1 Metrics</span></a>
   </div>
 </li>
@@ -195,7 +195,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./video.html" class="sidebar-item-text sidebar-link active">
+            <a href="./video.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Video + Audio</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -303,9 +303,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./image.html">Images</a></li><li class="breadcrumb-item"><a href="./metrics.html">2.1 Metrics</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="part-methods" class="quarto-section-identifier">Video + Audio</span></h1>
+<h1 class="title">2.1 Metrics</h1>
 </div>
 
 
@@ -322,17 +322,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The scripts in this section show how to generate annotations from a video file. As an example, we use a one minute sample from the 2010 State of the Union Address. If you are running the code on your own, you can use any of the following:</p>
-<ul>
-<li><strong>Steamboat Willie</strong> (steamboat): A clip from the short animated film Steamboat Willie, the first film to feature Mickey and Minnie Mouse. [<a href="https://archive.org/details/steamboat-willie-mickey">more info</a>]</li>
-<li><strong>Mountain Community Television</strong> (mctv): Produced by Mountain Community Television, this is a clip from the ‘First citizen workshop … aimed at letting citizens know what they can do to help implement the Strip Mining Control and Reclamation Act of 1977.’ [<a href="https://archive.org/details/9283VCBR3_Avg15MbpsVBR">more info</a>]</li>
-<li><strong>Black Journal: Interview with Angela Davis</strong> (blackjournal): A clip from episode 67 the television program Black Journal. Produced by NET Division, Educational Broadcasting Corporation. [<a href="https://americanarchive.org/catalog/cpb-aacip_512-1v5bc3tn06">more info</a>]</li>
-<li><strong>Women: What to Tell Children</strong> (women): A clip from the 12th episode of the television program Women. Produced by WNED, a PBS member television station in Buffalo, New York, United States. [<a href="">more info</a>]</li>
-<li><strong>Taskmaster: Series 7, Episode 4</strong> (taskmaster): A short clip from the British panel game show Taskmaster. [<a href="https://www.youtube.com/watch?v=M0ZbPzHUiAo">more info</a>]</li>
-<li><strong>State of the Union Address</strong> (sotu): A clip from Barack Obama’s State of the Union Address in 2010. [<a href="https://www.youtube.com/watch?v=L1PWQtCDaYY">more info</a>]</li>
-<li><strong>New Years Message, Emmanuel Macron [fr]</strong> (macron): A clip from Emmanuel Macron’s 2025 New Years message. Audio in French. [<a href="https://www.youtube.com/watch?v=pnbfaueJkTY">more info</a>]</li>
-</ul>
-<p>To get results in your browser for all of these collections and your own data, see the <a href="https://distant-viewing.github.io/dvgui-demo">Distant Viewing Explorer</a>.</p>
+<p>To learn more about the use of brightness, color, and complexity in image analysis, see the tutorial in Section 1.1.</p>
 
 
 
@@ -756,13 +746,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./embed.html" class="pagination-link" aria-label="2.7 Embedding">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2.7 Embedding</span>
+      <a href="./image.html" class="pagination-link" aria-label="Images">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Images</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./shot.html" class="pagination-link" aria-label="3.1 Shot Boundary">
-        <span class="nav-page-text">3.1 Shot Boundary</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./color.html" class="pagination-link" aria-label="2.2 Color">
+        <span class="nav-page-text">2.2 Color</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

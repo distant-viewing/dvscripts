@@ -1,4 +1,4 @@
-# 2.2 Image Classification {.unnumbered}
+# 2.3 Image Classification {.unnumbered}
 
 This is a minimal example script showing how to do image
 classification using a set of images that are stored on
