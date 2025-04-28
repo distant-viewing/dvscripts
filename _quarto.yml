@@ -54,6 +54,7 @@ bibliography: references.bib
 
 format:
   html:
+    include-in-header: header.html
     theme:
       - cosmo
       - dvt.scss

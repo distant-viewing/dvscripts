@@ -23,6 +23,8 @@ To rebuild do the following :
 python3.12 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+
 ```
 
 To build the R environment

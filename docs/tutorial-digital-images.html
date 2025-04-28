@@ -104,6 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script defer="" data-domain="distantviewing.org" src="https://plausible.io/js/script.hash.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -385,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For further information about the distant viewing toolkit (<strong>dvt</strong>), the open-source Python package that we have developed, please see the <a href="https://github.com/distant-viewing/dvt">project’s homepage</a>. More information about the theory of distant viewing and the specific application to movie image posters can be the found in our book, which is available to download for free under an open access license on our <a href="https://www.distantviewing.org/book/">website</a> along with additional data and code to replicate the other studies shown in the text. A second notebook following up on the methods here using moving images can be found <a href="https://colab.research.google.com/drive/1qQKQw8qHsTG7mK7Rz-z8nBfl98QBMWGf?usp=sharing">here</a>.</p>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="a37a3b1a" class="cell" data-execution_count="1">
+<div id="8c1561e8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -397,7 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="movie-poster-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="movie-poster-dataset">Movie Poster Dataset</h2>
 <p>Before we jump into the analysis of the movie posters images, it is important to take a moment to look at the metadata that we have attached to each poster and to understand the structure of the dataset. In the code below, we use the <code>read_csv</code> function from the pandas module (which we have given the short name <strong>pd</strong> following standard Python conventions) to load the csv file that has one row for each movie in our dataset. We will save the output of the function as an object named <code>posters</code>. In the final line of the code, we write the object name all by itself, which causes the first file lines of the dataset to be printed inside of the notebook for us to look at. The data contains one row for each of the 100 top grossing films for each year from 1970 through 2019. For a few movies during the 1970s we were not able to find the movie posters; these are excluded from the dataset. For each movie, we have the year, the title, the file name of the associated image of the movie poster, and a description of the half decade that the movie comes from. The latter will be used in our analysis of change over time.</p>
-<div id="d5eadff7" class="cell" data-execution_count="2">
+<div id="8beb3b2b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>posters <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_meta.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>posters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -500,7 +501,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We have another set of metadata that associates each film with one or more genre categories. The dataset contains one row for each pair of film and genre tag. The year is included because there are several films that share the same title, but can be uniquely identified by knowing the title and year of the film.</p>
-<div id="44032edb" class="cell" data-execution_count="3">
+<div id="fb5c6c1a" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>genre <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_tags.csv"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>genre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -597,7 +598,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="digital-images">Digital Images</h2>
 <p>Now that we have seen the metadata for the movie posters, let’s look at how digital images are manipulated in Python by loading in the image from a single movie poster. All of the movie posters are stored as JPEG files (an abbreviation for the Joint Photographic Experts Group). This is a common image format that can be opened and understood by nearly any program or device that works with images. If you opened a JPEG file on your computer or phone, it would display the image without any special setup required. Many of the images that you see on public websites are stored as JPEG files and are processed and displayed by your browser.</p>
 <p>In the code below, we use the function <code>dvt.load_image</code> to load an image into Python. We save the image as an object named <code>img</code>. The path to the poster image is taken directly from the metadata above. Here, we are using the formula of taking the name of the dataset (<code>posters</code>) followed by a period and the name of the column (<code>path</code>) followed by the row number in square brackets (<code>[10]</code>). We have selected the poster from the John Wayne film <em>The Legend</em> because it has a distinct orange tone that will be interesting to look at. After loading the image into Python, we print out the image object in the second line by including it on it’s own final line.</p>
-<div id="b179267b" class="cell" data-execution_count="4">
+<div id="d2a6f0e8" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.path[<span class="dv">10</span>])</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -609,7 +610,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We see that it’s relatively easy to load a common image file format into Python and then to display it within the notebook. In order to best understand the computational analyses that follow, it will be helpful to investigate the the way that digital image is represented inside of Python. We can use the built-in Python function <code>type</code> to see the obect type of any Python object. Let’s do that below:</p>
-<div id="bd339344" class="cell" data-execution_count="5">
+<div id="34d54f12" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>numpy.ndarray</code></pre>
@@ -617,7 +618,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>You may have reasonably assumed that the object would have a name related to the fact that it contains an image. But, we see that it is cryptically called a <code>numpy.ndarray</code>. What does this mean? This is a generic data type created by the numpy library (the same one that we loaded above in the setup section) to store rectangular blocks of numbers.</p>
 <p>To understand how an array of numbers can represent an image, we will print out the object’s shape attribute (an attribute is a characteristic of a Python object that we can access with the object name followed by a <code>.</code> and the attribute name). This tells us how the numbers in array are arranged.</p>
-<div id="89751524" class="cell" data-execution_count="6">
+<div id="32dc4e40" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>img.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>(229, 150, 3)</code></pre>
@@ -626,7 +627,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We see that the shape of the object has three components. The first number tells us how many rows of numbers there are and the second tells us how many columns there are. The third number indicates that there is a third dimension with a size of three. The easiest way to picture this is to think of having three sets of rectangular grids of numbers, each with 229 rows and 150 numbers. Think of an Excel file with three sheets, each having a grid of numbers of the same size.</p>
 <p>A specific row and column in this grid of numbers represents a <em>pixel</em> (picture + element), the smallest individal component of an image. We need three different numbers for each pixel to indicate the amount of red, green, and blue light that is needed to combine to create the color at each particular location. The Python library that we are using here represents the quantity of light on a scale from 0 (not turned on at all) through 255 (as bright as possible). Blending these three components together can recreate nearly any color observable by the human eye.</p>
 <p>To make this more concrete, let’s see an example of the numbers that create the image above. There are far too many to look at all at once. Instead, we will use a bracket notation to select the first ten rows, first eight columns, and the first color component. Python uses a convention that is common in computer programing that starts counting at zero, so the <code>0</code> below grabs from the first array of numbers, which here correspond to the red color intensity.</p>
-<div id="c1b41bfa" class="cell" data-execution_count="7">
+<div id="7ff51306" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">10</span>, :<span class="dv">8</span>, <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>array([[202, 206, 205, 204, 208, 207, 204, 208],
@@ -642,7 +643,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The portion of the image that we grabbed above is the far upper left-hand corner. We see that to represent this corner we need to turn on a lot of red light (around 200ish out a possible 255). However, if we look at the image there appear to be no color red anywhere. The upper left-hand corner appears to be white. To understand how this is the case, let’s look at the second component, which is the amount of green light.</p>
-<div id="2475e600" class="cell" data-execution_count="8">
+<div id="99cec217" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">10</span>, :<span class="dv">8</span>, <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>array([[202, 206, 205, 204, 208, 207, 204, 208],
@@ -658,7 +659,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>And while we are at it, also the amount of blue light.</p>
-<div id="c42c743e" class="cell" data-execution_count="9">
+<div id="45759128" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">10</span>, :<span class="dv">8</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>array([[202, 206, 205, 204, 208, 207, 204, 208],
@@ -675,7 +676,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Looking above, we see that the red, green, and blue lights are all turned on at the same level in the upper left-hand corner of the image. When we blend light from all three colors together, we get a shade of grey. This is something closer to black when the colors are all turned low, and something closer to white when the colors are all turned higher. So now this approximates what we see in the upper left corner of the image, corresponding to a shade of grey that is very close to white.</p>
 <p>To solidify our understanding how these components work, let’s see another part of the image corresponding to rows 180-190 and columns 25-30. It’s very small, but by looking closely we should be able to connect it to the image above. The resulting image is too small for Colab to automatically treat as an image for display purposes, so we need to use the <code>plt.imshow</code> function to display the pixel values as pixels.</p>
-<div id="d56c4c30" class="cell" data-execution_count="10">
+<div id="5aca7140" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(img[<span class="dv">180</span>:<span class="dv">190</span>, <span class="dv">25</span>:<span class="dv">30</span>, :])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -686,7 +687,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>This small window of the image is part of the orange at the bottom of the movie poster. Let’s see the red, green, and blue components that make up this color.</p>
-<div id="90e0146c" class="cell" data-execution_count="11">
+<div id="a5acaff9" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>img[<span class="dv">180</span>, <span class="dv">25</span>, :]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>array([189, 106,   0], dtype=uint8)</code></pre>
@@ -701,14 +702,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Computers represent images by understanding them as three-dimensional arrays of numbers. This is very different from the way that images are interpreted and used by human viewers. Furthermore, the connection between these two representations is not at all obvious. There is no way to understand what is being represented by a small subset of pixel intensities without seeing a large part of the image as a whole. Even something as simple as the amount of blue light in a given pixel can be difficult to understand. A lot of blue could be the color blue, or could just be blended with red and green to make white. So, in order to do computational analyses with large collections of digital images, we first need to convert these raw pixel intensities into representations that match the interpretations of the images that we are interested in studying.</p>
 <p>The theory behind distant viewing stems from this exact realization. Namely, that the way digital images are represented forces us to construct <em>annotations</em> that hold structured data that aligns with our research questions. These annotations, which can be created manually or using computational algorithms, are both destructive (there is information lost in the process of creating them) and open to interpretation (there is never a neutral way of creating annotations; decisions always need to be made about how they are created).</p>
 <p>We will work towards more complex annotations, but let’s start with one of the most straightforward: image brightness. Pixel intensities tell us how much to turn on the red, green, and blue lights at each postion of the image to create a display of a given image. The higher these numbers are, it stands to reason, the brighter the image will be when shown on a digital display. So, one way to represent a meaningful annotation about an image is to take the average value of all pixel intensities. We can do this with the following code, which uses the numpy function <code>mean</code> to compute the average (mean) of all the values in an array.</p>
-<div id="2e590e3a" class="cell" data-execution_count="12">
+<div id="ac81970d" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>np.mean(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>np.float64(93.82433770014556)</code></pre>
 </div>
 </div>
 <p>Little argument probably needs to be made to convince someone that a lot of information is lost between this one number and all of the rich information that is present in the thumbnail image of the movie poster. There is no information about the content of the text in the image, the dominant orange color, the shape of the man and the horse, the white border, or the way each of these elements is arranged in the frame. So, clearly this process of creating annotations is a destructive one. The difference between the summarized annotation (a single number) and the information in the original image is known in information theory as a <em>semantic gap</em>. But what about the second part of the theory, that this measurement is non-netural and represents specific choices about how we want to <em>view</em> at a distance? While this may seem less obvious, there are many different ways of measuring the brightness of an image. For example, we might want to consider the median value of the pixel intensities rather than their average value as in the code below.</p>
-<div id="f429096d" class="cell" data-execution_count="13">
+<div id="adf8a394" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>np.median(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>np.float64(75.0)</code></pre>
@@ -719,14 +720,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="annotating-image-brightness" class="level2">
 <h2 class="anchored" data-anchor-id="annotating-image-brightness">Annotating Image Brightness</h2>
 <p>We have now carefully worked through the way the digital images are stored, understood the implication for this in terms of the theory of distant viewing, and shown one particular way of constructing an annotation through image brightness. Let’s now put this together to do an analysis of the movie posters based on their overall brightness. As a first step, we need to repeat the process used with the one poster above to all of the images in the dataset. In order to do this we use a loop in Python. This consists of the keyword <code>for</code>, followed by a block of indented code. Each of the lines of the indented code will be run once for every value of the iteration variable <code>ind</code> from the set of row numbers in the <code>posters</code> dataset. So, we will load the image of each poster into Python, compute the image brightness, and the save the brightness in a new column that we created in the dataset. To match the results in the book as closely as possible, we will divide the brightness by 255 so that the values range from 0 (completely black) to 1 (completely white).</p>
-<div id="cfc56e56" class="cell" data-execution_count="14">
+<div id="06d497c1" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'avg_brightness'</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind <span class="kw">in</span> posters.index:</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.loc[ind, <span class="st">'path'</span>])</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'avg_brightness'</span>] <span class="op">=</span> np.mean(img) <span class="op">/</span> <span class="dv">255</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now that we have added the annotation of the image brightness to each of the rows of the poster data, we can arrange the posters from the brightest to the darkest using the <code>sort_values</code> method.</p>
-<div id="e40fb145" class="cell" data-execution_count="15">
+<div id="5c34433b" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>posters <span class="op">=</span> posters.sort_values(<span class="st">'avg_brightness'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>posters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
@@ -842,7 +843,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The theory of distant viewing tells us that the creation of annotations, while a necessary step in computational analysis of images, is both destructive and subjective. So, before continuing to an aggregative analysis, it is useful to connect the annotations back to the images by actually looking at some of the posters. One way to do that is to look at posters with extreme values. In the code below we load the first image in the sorted dataset, which is the poster that has been assigned the highest brightness value. Remember that Python starts counting at zero. The zero in the first line corresponds to the first row of the data.</p>
 <p>Feel free to look at other particularly bright rows to get a fuller picture of what is being captured by the annotation.</p>
-<div id="dfcdc34d" class="cell" data-execution_count="16">
+<div id="f8dc3ab3" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[<span class="dv">0</span>].path)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -854,7 +855,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>It’s similarly useful to look at the darkest images in the dataset. To do that we modify the code to start at the number of rows in the data minus one (again, because of Python’s convention of starting to count at zero). You can change the minus 1 to minus n to look at the n’th least bright image in the data.</p>
-<div id="773816e8" class="cell" data-execution_count="17">
+<div id="082be4d1" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[posters.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span>].path)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -867,7 +868,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>After looking at some example posters, how do you feel about the annotation’s ability to capture poster brightness? At least at the extremes, what feature(s) of the poster seem to best explain/predict the brightness of the image?</p>
 <p>Now that we have some understanding of how the annotation works, and hopefully some confidence that it corresponds with some meaningful quantity, let’s do some aggregative analysis with the annotations. In the code below we group out dataset by <code>period</code> (half-decades from 1970 through 2019) and look at the mean average brightness of all posters from that period.</p>
-<div id="37c2ee1c" class="cell" data-execution_count="18">
+<div id="25300f65" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>posters.groupby([<span class="st">'period'</span>])[<span class="st">'avg_brightness'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>period
@@ -886,7 +887,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 <p>How would you characterize the pattern here? Is there a meaningful pattern? If so, do you have any hypotheses about what might be behind them?</p>
 <p>Let’s do a similar analysis using the genres associated with each film. To do this, we first use the function <code>pd.merge</code> to combine our posters data with the genres table.</p>
-<div id="f4a4a681" class="cell" data-execution_count="19">
+<div id="1371c1bd" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.merge(posters, genre, on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'title'</span>])</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
@@ -1013,7 +1014,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 </div>
 <p>Then, we can repeate the analysis from the period data by grouping on genre and then taking the average brightness of each genre. Whereas it made sense to arrange the periods in chronological order to see a pattern, here it will be better to have Python arrange the genres by their mean average brightness. We do this with the <code>sort_values</code> method on the summarized data.</p>
-<div id="3bcf2807" class="cell" data-execution_count="20">
+<div id="346f860f" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'genre'</span>])[<span class="st">'avg_brightness'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>genre
@@ -1040,7 +1041,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 <h2 class="anchored" data-anchor-id="saturation-and-chroma">Saturation and Chroma</h2>
 <p>We have already seen that if we do a careful analysis, we can do quite a bit of work with a relatively straightforward annotation based on image brightness. Our goal though is to understand the use of color more broadly in movie posters, which will require creating additional annotations that capture other aspects of poster color. One way to do this is to first convert the raw pixel intensities into an alternative color space.</p>
 <p>The RGB representation of pixels by the amount of red, green, and blue light needed to create the color at a specific point in space comes from the low-level engineering needs to image capture and display. As we have already seen, it is not a particularly meaningful way to think about our perception of color. Fortunately, there are other ways to represent color that more closely align with human perception and understanding. In order to understand how this works, let’s re-load the poster of the John Wayne movie <em>The Legend</em>.</p>
-<div id="240fc093" class="cell" data-execution_count="21">
+<div id="a6fe2861" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.path[<span class="dv">10</span>])</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1052,14 +1053,14 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 </div>
 <p>Recall that above we located a specific pixel that corresponds to the burnt orange color in the poster. It has a RGB representation of the following:</p>
-<div id="3729f539" class="cell" data-execution_count="22">
+<div id="9b6b3806" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>img[<span class="dv">180</span>, <span class="dv">25</span>, :]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>array([189, 106,   0], dtype=uint8)</code></pre>
 </div>
 </div>
 <p>We can convert the RGB format into an HSV format using the <code>cvt2.cvtColor</code> function by specifying the type of color space transformation (<code>COLOR_RGB2HSV</code>) to use as a second argument. We will do some conversion of the scales of the output to convert them into a scale from 0 to 1, which will better match other sources as well as the longer discussion of this case study in Chapter 3 of <em>Distant Viewing</em>.</p>
-<div id="378e801c" class="cell" data-execution_count="23">
+<div id="9ee07b9e" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_RGB2HSV)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> img_hsv.astype(np.float64)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">0</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">0</span>] <span class="op">/</span> <span class="fl">179.0</span></span>
@@ -1071,7 +1072,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 </div>
 <p>Notice that the shape of the output is exactly the same as the original image. The rows and columns still correspond to the same locations as the RGB model; it is only the triple of numbers at that location that have changed. Let’s see what our burnt orange pixel looks like now:</p>
-<div id="d8cb9537" class="cell" data-execution_count="24">
+<div id="d2a05523" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>img_hsv[<span class="dv">180</span>, <span class="dv">25</span>, :]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>array([0.09497207, 1.        , 0.74117647])</code></pre>
@@ -1080,7 +1081,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 <p>The first component is around <code>0.095</code>. This correspond to the <strong>hue</strong> of the pixel, with this number corresponding to the color orange. Hue is a bit complex and we will further investigate how it works in the next section. The second number is the <strong>saturation</strong>, which represents how rich the color is. A light pastel, such as a pale pink, will have a low saturation. Here, we see that the saturation is the maximum value of <code>1</code>. Finally, the value is an alternative representation of brightness, which here we see is equal to <code>0.74</code>.</p>
 <p>Let’s now focus on the saturation of the posters and do a similar analysis to the ones above with brightness. To more closely follow the analysis in the book, we will compute the related quantity called <strong>chroma</strong> instead of working with saturation directly. This can be computed by multiplying the saturation by the value. We used this quantity because it more closely aligns with the idea of the richness of color that we wanted to capture. For example, we see that the burnt orange color in our poster for <em>The Legend</em> has a saturation of <code>1</code>, but it’s chroma is only <code>0.74</code> (saturation times value). Only a “pure” orange color, like what you would see on a color wheel, would have a chroma of 1.</p>
 <p>Now, let’s cycle through the posters and add the average chroma value to each of them just as we did with the image brightness.</p>
-<div id="8947f5e3" class="cell" data-execution_count="25">
+<div id="cbedd6d3" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'avg_chroma'</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind <span class="kw">in</span> posters.index:</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.loc[ind, <span class="st">'path'</span>])</span>
@@ -1092,7 +1093,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 <span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'avg_chroma'</span>] <span class="op">=</span> np.mean(img_hsv[:, :, <span class="dv">1</span>] <span class="op">*</span> img_hsv[:, :, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And again we will arrange the posters data from the most to the least highest levels of chroma.</p>
-<div id="3541679e" class="cell" data-execution_count="26">
+<div id="c78e07c3" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>posters <span class="op">=</span> posters.sort_values(<span class="st">'avg_chroma'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>posters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
@@ -1219,7 +1220,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 </div>
 <p>Now, let’s once again look at some of the posters that correspond to extreme values. It is always an important step when working with new annotations to go back to the original images, and actually look at them to see how the numeric representation of the image corresponds to our own viewing and interpretation. As before, please feel free to experiment by looking at other posters with particularly high values.</p>
-<div id="3ebb1bde" class="cell" data-execution_count="27">
+<div id="8560c346" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[<span class="dv">0</span>].path)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1231,7 +1232,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 </div>
 <p>We can also do this with posters have the lowest average chroma. Many posters have an average chroma equal to zero. Can you think of what feature these all share in common before looking at the examples?</p>
-<div id="383308d1" class="cell" data-execution_count="28">
+<div id="52ea5a8d" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.iloc[posters.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span>].path)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1243,7 +1244,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 </div>
 <p>Let’s see how the average chroma corresponds to the genres associated with each of the movie posters. Because there is such a shift in brightness from first twenty years of the data (a lot was in black and white), we will filter the data after merging in the genres to only include years from 1990 onwards.</p>
-<div id="410b9d2a" class="cell" data-execution_count="29">
+<div id="41ecea04" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.merge(posters, genre, on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'title'</span>])</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">"year"</span>] <span class="op">&gt;=</span> <span class="dv">1990</span>]</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'genre'</span>])[<span class="st">'avg_chroma'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1271,7 +1272,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 <section id="dominant-color" class="level2">
 <h2 class="anchored" data-anchor-id="dominant-color">Dominant Color</h2>
 <p>Having looked at the brightness/value and saturation/chroma of the posters, we now look to the third element of color, know as <strong>hue</strong>. To get started, let’s take a different example poster. Here, we will load the poster from the movie <em>Take the Lead</em> (2006), which has several different hues of color in it.</p>
-<div id="c46173ec" class="cell" data-execution_count="30">
+<div id="7fdd1f10" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters.path[<span class="dv">4016</span>])</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1283,7 +1284,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 </div>
 <p>Now, let’s compute the HSV coordinates of this image just as we did in the previous section. Additionally, we will reshape the pixel data so that the array has one row for each pixel and only three columns. This is just some re-arranging to make the rest of the code easier to write and understand.</p>
-<div id="97a37051" class="cell" data-execution_count="31">
+<div id="42309adf" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_RGB2HSV)</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>img_hsv <span class="op">=</span> img_hsv.astype(np.float64)</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>img_hsv[:, :, <span class="dv">0</span>] <span class="op">=</span> img_hsv[:, :, <span class="dv">0</span>] <span class="op">/</span> <span class="fl">179.0</span></span>
@@ -1297,7 +1298,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 <p>The hue is a number between 0 and 1 that indicate what we would colloqually call “color”. Unlike brightness, saturation, chroma, and value, these numbers are best thought of being arranged in a circle (see the associated slides for a visualization). A value of <code>0</code> corresponds with red, <code>.33</code> with green, <code>.5</code> with cyan, and <code>.66</code> with blue. Values close to 1 wrap back through purple and link back into red. So, the hues <code>0.01</code> and <code>0.99</code> are actually quite similar.</p>
 <p>To understand a bit better, let’s look at a histogram showing the distribution of the hues in the image. We need to be careful, though, because our interpretation of hue is only applicable when the chroma is sufficently large. If the chroma value is small, there is little color to show anyway and the differences between hues may be difficult or impossible to differentate. In the code below, we should the distribution of hues with a chroma above <code>0.3</code>.</p>
-<div id="c37d0644" class="cell" data-execution_count="32">
+<div id="efa078b0" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>plt.hist(img_hsv[img_hsv[:,<span class="dv">1</span>] <span class="op">*</span> img_hsv[:,<span class="dv">2</span>] <span class="op">&gt;</span> <span class="fl">0.3</span>, <span class="dv">0</span>], bins<span class="op">=</span><span class="dv">100</span>)</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1310,7 +1311,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 <p>We should see a lot of values near <code>0.3</code>; these correspond to the green in the poster, which takes up a lot of space in the image. The peak near <code>0.66</code> is associated with the blue in the image, mainly on the silhouettes of the two characters on the poster. The smaller amount near one, and also wrapping around at 1, is the orange/red color in the title of the movie.</p>
 <p>Taking averages of hues does not in general provide meaningful summaries. For an extreme example, if we take the average of two shades of red that have hues of <code>0.99</code> and <code>0.01</code>, this would yield a hue of <code>0.5</code>, cyan, a color directly between green and blue. Alternatively, we can create an annotation of hue by breaking the range of hues up into standard color names and then count the proportion of each poster that corresponds with each color. To do this, we will load another dataset that we created with common cut-off values for each of the hues.</p>
-<div id="b60dbe87" class="cell" data-execution_count="33">
+<div id="3c28fe2d" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>hue <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_hue.csv"</span>)</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="33">
@@ -1391,7 +1392,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 </div>
 <p>Next, we take the hues in <code>img_hsv</code> and count the numbes of pixels that are in each of these buckets after filtering for a sufficently high chroma to have a meaningful hue.</p>
-<div id="289fca77" class="cell" data-execution_count="34">
+<div id="1a718f33" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> np.append(<span class="dv">0</span>, hue.end.values)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>cnt, _ <span class="op">=</span> np.histogram(img_hsv[(img_hsv[:,<span class="dv">1</span>] <span class="op">*</span> img_hsv[:,<span class="dv">2</span>] <span class="op">&gt;</span> <span class="fl">0.3</span>), <span class="dv">0</span>], bins <span class="op">=</span> bins)</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>cnt[<span class="dv">0</span>] <span class="op">=</span> cnt[<span class="dv">0</span>] <span class="op">+</span> cnt[<span class="dv">7</span>]</span>
@@ -1402,14 +1403,14 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 </div>
 <p>There are a number of different ways to summarize these counts. We will create two annotations from them. First, we associate each poster with a dominant color corresponding to the hue name that is most strongly represented in the poster. This can be done with the following code. As we see, the code associates the <em>Take the Lead</em> poster with the color green as would be have expected from the histogram.</p>
-<div id="d70d014d" class="cell" data-execution_count="35">
+<div id="075a202a" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>hue.cnom.values[np.argmax(cnt)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="35">
 <pre><code>'green'</code></pre>
 </div>
 </div>
 <p>The other helpful quantity that we will save is the proportion of the entire poster that corresponds to this most dominant color. Using the code below, we see that that over 42% of this poster corresponds to hues which we have categorized as “green”.</p>
-<div id="d9dbbc21" class="cell" data-execution_count="36">
+<div id="10011b6c" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>color_percent <span class="op">=</span> np.<span class="bu">max</span>(cnt) <span class="op">/</span> img_hsv.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>color_percent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="36">
@@ -1417,7 +1418,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 </div>
 <p>Now that we have seen how to do this with a single image, let’s cycle through all of the posters and compute the name of the dominant color and the percentage of the poster corresponding to each color for each of the posters.</p>
-<div id="4c791205" class="cell" data-execution_count="37">
+<div id="5bdaebfb" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'dom_color'</span>] <span class="op">=</span> <span class="st">''</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>posters[<span class="st">'dom_color_percent'</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind <span class="kw">in</span> posters.index:</span>
@@ -1436,7 +1437,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 <span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>  posters.loc[ind, <span class="st">'dom_color_percent'</span>] <span class="op">=</span> color_percent <span class="op">=</span> np.<span class="bu">max</span>(cnt) <span class="op">/</span> img_hsv.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As with the other two annotations, we can start by looking at the the posters the have the most amount of dominant color for each given hue. Here, for example is the code to show the image with the largest amount of blue. Try to change the code to see other colors such as “red”, “yellow”, and “green”.</p>
-<div id="c93f3967" class="cell" data-execution_count="38">
+<div id="494bfc99" class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> posters[posters.dom_color <span class="op">==</span> <span class="st">"blue"</span>].sort_values(</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'dom_color'</span>, ascending<span class="op">=</span><span class="va">False</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>).iloc[<span class="dv">0</span>].path)</span>
@@ -1450,7 +1451,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 </div>
 <p>Now, let’s do some analysis with these annotations. We will join the genre data back into the annotations and, as before, filter to only films from 1990 onwards. We will also only consider posters that have at least 5% of whatever the selected dominant color is.</p>
-<div id="400a82bb" class="cell" data-execution_count="39">
+<div id="d21ebdc6" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.merge(posters, genre, on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'title'</span>])</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">"year"</span>] <span class="op">&gt;=</span> <span class="dv">1990</span>]</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">'dom_color_percent'</span>] <span class="op">&gt;</span> <span class="dv">5</span>]</span>
@@ -1615,7 +1616,7 @@ Name: avg_chroma, dtype: float64</code></pre>
 </div>
 </div>
 <p>Now, we can compute the proportion of posters from each genre that have red as a dominant color using the code below.</p>
-<div id="559407fe" class="cell" data-execution_count="40">
+<div id="e401ce77" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'percent_color'</span>] <span class="op">=</span> (df[<span class="st">'dom_color'</span>] <span class="op">==</span> <span class="st">"red"</span>)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'genre'</span>])[<span class="st">'percent_color'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="40">
@@ -1645,7 +1646,7 @@ Name: percent_color, dtype: float64</code></pre>
 <p>Of course, many applications of distant viewing will want to integrate other kinds of annotations, many of which require using more advanced machine learning techniques such as neural networks and large language models. In this final section of analysis, we will show how to use a face detection model to add an additional annotation to our movie posters dataset using the distant viewing toolkit (<strong>dvt</strong>).</p>
 <p>The distant viewing toolkit simplifes the process of applying several common computer visional algorithms to still and moving images. Most of the difficult work of standardizing the inputs, downloading models, and getting all of the results into the same format is taken care of in dvt. All that we need to do is load the annotator that we are interested in, load the images of interest, and create the annotations by calling a specific method from each annotator. To start, we will use the code below to load and save a <code>AnnoFaces</code> object for detecting faces in images. The first time this function is called, Python will download the underlying model that does this processing.</p>
 <p>Why might we be interested in detecting faces in movie posters? Which questions could we ask?</p>
-<div id="f9c5725c" class="cell" data-execution_count="41">
+<div id="fafb4519" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>anno_face <span class="op">=</span> dvt.AnnoFaces()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/Users/admin/gh/dvscripts/env/lib/python3.12/site-packages/dvt/face.py:38: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
@@ -1655,7 +1656,7 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 </div>
 <p>In order to get good results from face detection, unlike the color analysis, we need to work with the full resolution version of the movie posters. We downloaded a full-size image for this purpose from the movie <em>Love Story</em>, the top-grossing film from 1970. Let’s read this image into Python using the function <code>load_image</code>. We can display this in the Colab notebook, noting that it is much larger and sharper than the thumbnails we were using previously.</p>
-<div id="06876a02" class="cell" data-execution_count="42">
+<div id="47928ae9" class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">'data/love_story.jpg'</span>)</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -1667,11 +1668,11 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 </div>
 <p>In order to run the face detection annotator on the image, we use the <code>run</code> method of the annotator and provide the image that we have loaded as an argument to the function.</p>
-<div id="79f6c001" class="cell" data-execution_count="43">
+<div id="d68f388f" class="cell" data-execution_count="43">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>out_face <span class="op">=</span> anno_face.run(img, visualize<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output of the annotation contains two objects. The first is the original image with boxes around the detected faces. This is useful for the qualatitive analysis and assessment of how well the algorithm works on our data. We see in this example that the algorithm has found the two faces present in the poster.</p>
-<div id="211273a4" class="cell" data-execution_count="44">
+<div id="9a60c3e8" class="cell" data-execution_count="44">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_face[<span class="st">'img'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1682,7 +1683,7 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 </div>
 <p>A structured data version of the detected faces is provided in the object named <code>boxes</code>. It can be turned into a data frame with the <code>pd.DataFrame</code> function. Here, we see that it tells us the pixel coordinates (from the upper-left hand corner) of the detected faces along with a probability score, which tells us how confident the prediction is that there is actually a face in the given location.</p>
-<div id="7a49bdb8" class="cell" data-execution_count="45">
+<div id="5a5ffa96" class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(out_face[<span class="st">'boxes'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="45">
 <div>
@@ -1726,7 +1727,7 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 </div>
 <p>So, as with the color annotations, the next step is to run this annotation over all of the posters and collect the results. The model for face detection is quite a bit slower than the color annotators and requires the larger version of the movie poster data. If we were to have the full images instead of the thumbnails the following code (with the hash signs removed from the start of the lines, which we added here to ensure that we do not accidentally run the code) would create the desired dataset.</p>
-<div id="2732bb55" class="cell" data-execution_count="46">
+<div id="7fdacaf9" class="cell" data-execution_count="46">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">#output = []</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co">#for idx, ip in enumerate(posters.index):</span></span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  path = posters.loc[ind, 'path']</span></span>
@@ -1743,7 +1744,7 @@ Name: percent_color, dtype: float64</code></pre>
 <span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a><span class="co">#faces.to_csv("data/movies_50_years_face.csv", index=False)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Given the time and data constraints, we have provided a version of the annotated faces that we can read directly into Python as a CSV file. Note that it is very similar to output directly from the <code>AnnoFaces</code> object, just with the year and title of the movie added as the first two columns.</p>
-<div id="42eea708" class="cell" data-execution_count="47">
+<div id="87c9f1a8" class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>faces <span class="op">=</span> pd.read_csv(<span class="st">"data/movies_50_years_face.csv"</span>)</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>faces</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="47">
@@ -1894,7 +1895,7 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 </div>
 <p>The annotations above provide one row for each detected face in one of the movie posters. In order to analyze these annotations, we need to aggregate them so that we have a single summary value for each poster. One way to do that is to filter the faces to only those above a threshold probability score and then count how many faces are present in each poster. Then, we can add this count back into the posters table. We need to be careful about doing this so as to make sure that we are not missing the posters that have zero faces. The sequence of pandas functions below puts all of these steps together, as well as joining to the genre table, which we will use shortly. We usually pick a pretty high threshold (.95 in this case) given our experience with face detection algorithms and knowing this data.</p>
-<div id="c8e07eca" class="cell" data-execution_count="48">
+<div id="f69deae2" class="cell" data-execution_count="48">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> faces[faces[<span class="st">'prob'</span>] <span class="op">&gt;</span> <span class="fl">0.95</span>][[<span class="st">'year'</span>, <span class="st">'title'</span>]].value_counts().reset_index(name<span class="op">=</span><span class="st">'num_face'</span>)</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> pd.merge(posters, face_cnt, how<span class="op">=</span><span class="st">'left'</span>)</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>face_cnt <span class="op">=</span> pd.merge(face_cnt, genre)</span>
@@ -2073,7 +2074,7 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 </div>
 <p>As we have done with the color annotations, it is a good idea to look at some of the results. The table above shows that the poster for the 1999 film <em>Being John Malkovich</em> has a total of 107 faces. This may seem like an error, but let’s look at the movie poster to check.</p>
-<div id="df2a5b05" class="cell" data-execution_count="49">
+<div id="ed89f620" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> dvt.load_image(<span class="st">"data/"</span> <span class="op">+</span> face_cnt.iloc[<span class="dv">0</span>].path)</span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -2086,7 +2087,7 @@ Name: percent_color, dtype: float64</code></pre>
 </div>
 <p>So, in fact, it does seem like having a hundred detected faces is reasonable after looking at the poster. It’s hard to confirm that the exact number is correct (it’s almost certainly not), but at least we feel good that the algorithm is doing something reasonable. Feel free to try some other poster values and see if they also have a large number of faces. In a full analysis, it would be a good idea to go through and check how many of the detected faces were correctly located, but for now we will take these qualitative results as a good starting point and move on to a final analysis.</p>
 <p>Let’s start by seeing if there are any temporal patterns in the average number of faces present in each of the posters.</p>
-<div id="6c632d8d" class="cell" data-execution_count="50">
+<div id="e042235a" class="cell" data-execution_count="50">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>posters.groupby([<span class="st">'period'</span>])[<span class="st">'avg_brightness'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="50">
 <pre><code>period
@@ -2105,7 +2106,7 @@ Name: avg_brightness, dtype: float64</code></pre>
 </div>
 <p>What pattern(s) arise in the number of faces on the posters? Can you think of any reason that there might be more faces on average during the 1970s compared to more recent decades?</p>
 <p>As with the color-based annotations, we can take the mean value of these counts by genre and see if there are any interesting patterns.</p>
-<div id="1ef26d88" class="cell" data-execution_count="51">
+<div id="fd8f90f7" class="cell" data-execution_count="51">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>face_cnt.groupby([<span class="st">'genre'</span>])[<span class="st">'num_face'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="51">
 <pre><code>genre
@@ -2128,7 +2129,7 @@ Name: num_face, dtype: float64</code></pre>
 </div>
 <p>Take a few minutes to look at the table. Do you see any consistent patterns? Can you think of any hypotheses about what might be causing these? Can you think of any cautions that might provide any caveats to the analysis of the face detection algorithm?</p>
 <p>As we saw above, there are several posters that have a very large number of faces. It might be enlightening to look at the median number of faces by genre in addition to the average number.</p>
-<div id="51c9b8cc" class="cell" data-execution_count="52">
+<div id="e4ef9d3c" class="cell" data-execution_count="52">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>face_cnt.groupby([<span class="st">'genre'</span>])[<span class="st">'num_face'</span>].median().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="52">
 <pre><code>genre
@@ -2151,7 +2152,7 @@ Name: num_face, dtype: float64</code></pre>
 </div>
 <p>How do the median values compare to the average values? Do they help tell a story about faces that are present in the poster?</p>
 <p>As a final analysis, to show the many different ways that we can analyze the same annotations, we will compute the proportion of posters that have at least one face on them and summarize by genre.</p>
-<div id="476cd97d" class="cell" data-execution_count="53">
+<div id="e444a513" class="cell" data-execution_count="53">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>face_cnt[<span class="st">'face_present'</span>] <span class="op">=</span> (face_cnt[<span class="st">'num_face'</span>] <span class="op">&gt;</span> <span class="dv">0</span>)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>face_cnt.groupby([<span class="st">'genre'</span>])[<span class="st">'face_present'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="53">

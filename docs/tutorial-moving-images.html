@@ -104,6 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script defer="" data-domain="distantviewing.org" src="https://plausible.io/js/script.hash.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -384,7 +385,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This notebook does not require any previous knowledge of Python or computer vision. However, it moves fairly quickly through the preliminary steps of working with digital images and only explains the most important aspects of the Python code in each step. For a more in-depth introduction to how computers view images images and python, we recommend first following the Distant Viewing Tutorial: Movie Posters and Color Analysis notebook using the movie posters corpus, which can be accessed <a href="https://colab.research.google.com/drive/1qQKQw8qHsTG7mK7Rz-z8nBfl98QBMWGf?usp=sharing">here</a>. For more about the Python package that we built, Distant Viewing Toolkit (<strong>dvt</strong>), please visit <a href="https://github.com/distant-viewing/dvt">our GitHub repository</a>.</p>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div id="7d41fd73" class="cell" data-execution_count="1">
+<div id="51411608" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -396,7 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="network-era-sitcom-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="network-era-sitcom-dataset">Network-Era Sitcom Dataset</h2>
 <p>Before we start looking at the computational steps needed to work with moving image data, it’s helpful to understand the humanities research questions that motivate this work. Here, we are concerned with two popular U.S. sitcoms from the 1960s and early 1970s: <em>Bewitched</em> (1964-1972) and <em>I Dream of Jeannie</em> (1965-1970). Here is metadata about each of the episodes from the entire runs of the two shows:</p>
-<div id="0af90b03" class="cell" data-execution_count="2">
+<div id="9976d87f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pd.read_csv(<span class="st">"data/ttl_sitcom_metadata.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>meta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -560,7 +561,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="working-with-video-frames-as-images">Working with Video Frames as Images</h2>
 <p>Video file formats such as <strong>mp4</strong>, <strong>avi</strong>, and <strong>ogg</strong> typically store moving images in a complex format that is highly optimized to reduce file sizes and decompression time. When working with moving images computationally in programs such as Python, however, we typically decompress these files and turn them into a sequence of individual images stored as arrays of pixels, with one image for each frame in the input video. The distant viewing toolkit (<strong>dvt</strong>) contains several functions to efficently work with video files in Python. In this section, we will demonstrate how these work.</p>
 <p>First, we can use the <code>video_info</code> function to access metadata about a video file. Here, we will load the metadata for our sample video file, which displays the number of frames, the height and width of each frame in pixels, and rate of playback given as frames per second (<code>fps</code>).</p>
-<div id="1afbc06e" class="cell" data-execution_count="3">
+<div id="d5e197bf" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>info <span class="op">=</span> dvt.video_info(<span class="st">'data/bewitched_sample.mp4'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -573,7 +574,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As we see in the metadata, even this short clip has 1319 individual frames. When working with an entire television episode, let along a feature-length movie file, it quickly becomes difficult to load all of frames from a video into Python at once. The image sizes, particularly once we start looking at materials in high-definition, are just too large to hold these all in even a computer’s memory at the same time.</p>
 <p>The distant viewing toolkit (<strong>dvt</strong>) offers an alternative approach using the <code>yield_video</code> function. It allows us to write a loop object which loads in each frame of the video file one by one. Specifically, each time the yield function is called, it returns the next frame as an array of pixels, an integer describing the frame number from the start of the video file, and a time code giving the number of seconds since the start of the video.</p>
 <p>The code below show an example of how the <code>yield_video</code> function works. We cycle through each of the frames. For each frame we store the frame number, the timestamp, and the average pixel values (a measurement of the frame’s brightness). Then, we turn this into a tabular data frame with one row for each frame in the video.</p>
-<div id="5e27cef1" class="cell" data-execution_count="4">
+<div id="4863c7f2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> {<span class="st">'frame'</span>: [], <span class="st">'time'</span>: [], <span class="st">'brightness'</span>: []}</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> img, frame, msec <span class="kw">in</span> dvt.yield_video(<span class="st">"data/bewitched_sample.mp4"</span>):</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  output[<span class="st">'frame'</span>].append(frame)</span>
@@ -670,7 +671,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Brightness is one of the simpliest annotations that we can use to summarize an image. But, even this simple measurement can already provide a rough way of representing our video clip. To see this, let’s plot the brightness of the frame over time.</p>
-<div id="2aef9fb2" class="cell" data-execution_count="5">
+<div id="a51d5d2d" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.plot(output[<span class="st">'time'</span>], output[<span class="st">'brightness'</span>])</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -687,7 +688,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="shot-boundary-detection">Shot Boundary Detection</h2>
 <p>One of the first tasks that we often want to perform on a video file is to identify the breaks between shots. This process is called <em>shot boundary detection</em>. As we saw in the brightness plot above, some simple heuristics can be used to approximately identify many kinds of shot breaks. If we want more accurate predictions, which do not falsely identify quick motion as a shot boundary or fail to find subtle breaks such as cross-fades, we need to make use of a more complex algorithm. The distant viewing toolkit (<strong>dvt</strong>) includes a neural-network based shot boundary detection algorithm that we have found works well across many different genres and input types.</p>
 <p>To run the built-in shot boundary detection algorithm, we need to first create a new annotator with the <code>AnnoShotBreaks</code> function. Then, we run the annotator over the video file. This is the only annotator in the toolkit that works directly with a video file rather than individual images or frames. The Python code will print out its progress through the file as it runs, returning a dictionary object with the predicted boundaries.</p>
-<div id="08caa7c1" class="cell" data-execution_count="6">
+<div id="b94dfba6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>anno_breaks <span class="op">=</span> dvt.AnnoShotBreaks()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>out_breaks <span class="op">=</span> anno_breaks.run(<span class="st">"data/bewitched_sample.mp4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -699,7 +700,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We will convert the output of the shot boundary detection into a tabular dataset as well as add the start time and end time information using the metadata that we grabbed from the <code>video_info</code> function above. Here is what the algorithm found for this video clip:</p>
-<div id="9081f2c6" class="cell" data-execution_count="7">
+<div id="26f2387d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>shot <span class="op">=</span> pd.DataFrame(out_breaks[<span class="st">'scenes'</span>])</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>shot[<span class="st">'mid'</span>] <span class="op">=</span> (shot[<span class="st">'start'</span>] <span class="op">+</span> shot[<span class="st">'end'</span>]) <span class="op">//</span> <span class="dv">2</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>shot[<span class="st">'start_t'</span>] <span class="op">=</span> shot[<span class="st">'start'</span>] <span class="op">/</span> info[<span class="st">'fps'</span>]</span>
@@ -777,14 +778,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Take a few minutes to confirm that these shot boundaries correspond to the ones that you found when watching the video. You can even rewatch (and pause at each break) the video and see that it corresponds with the breaks that were automatically identified in the shot boundary detection.</p>
 <p>In the next section we will look at face detection and identification. This is a common task when working with movie image data but ultimately works using individual images. To make this a bit easier to work with at first, we will use the following code to build a dataset with one frame from each of the detected shots in the video clip file. Specifically, we grab the middle frame from each cut, as specified in the <code>shot</code> data frame above.</p>
-<div id="078ef660" class="cell" data-execution_count="8">
+<div id="76ddec28" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>img_list <span class="op">=</span> []</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> img, frame, msec <span class="kw">in</span> dvt.yield_video(<span class="st">"data/bewitched_sample.mp4"</span>):</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> frame <span class="kw">in</span> shot[<span class="st">'mid'</span>].values:</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    img_list.append(img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To get a sense of what these look like, we can combine the images and convert them into thumbnails to get a view of what the six shots from our sample video file look like.</p>
-<div id="2cb5c862" class="cell" data-execution_count="9">
+<div id="550c7a48" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>img_comb <span class="op">=</span> np.hstack(img_list)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>img_comb <span class="op">=</span> cv2.resize(img_comb, (img_comb.shape[<span class="dv">1</span>] <span class="op">//</span> <span class="dv">5</span>, img_comb.shape[<span class="dv">0</span>] <span class="op">//</span> <span class="dv">5</span>))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(img_comb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -802,7 +803,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="face-detection-and-facial-recognition">Face Detection and Facial Recognition</h2>
 <p>Locating and identifying the faces present in a particular frame of a video file is a common way of understanding the narrative structure and visual style of the source material. In this section, we will see how to work with faces using the functions within the distant viewing toolkit (<strong>dvt</strong>) applied to the six images from the sample video file that we extracted in the previous section. After seeing how to do this with a static set of images, in the following section we will see how to put this together in a way that would scale to larger video files.</p>
 <p>To get started, we will load the face detection annotator <code>AnnoFaces</code> that is included in the distant viewing toolkit. The first time this is run, the function will automatically download the relevant model files and save them locally in our Colab workspace.</p>
-<div id="c90da08b" class="cell" data-execution_count="10">
+<div id="f4eccdd5" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>anno_face <span class="op">=</span> dvt.AnnoFaces()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/Users/admin/gh/dvscripts/env/lib/python3.12/site-packages/dvt/face.py:38: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
@@ -812,11 +813,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>To apply the annotation, we pass an image file to the <code>run</code> method of the annotator. Optionally, we can set the flag <code>visualize</code> to <code>True</code> in order to return a visualization of the detected face(s). Let’s run the annotation over the third image (remembering that Python starts counting at zero, so the third image is selected by selecting the image in position 2).</p>
-<div id="23aa066e" class="cell" data-execution_count="11">
+<div id="c926a446" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>out_face <span class="op">=</span> anno_face.run(img_list[<span class="dv">2</span>], visualize<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Because we set the visualization flag to <code>True</code>, the returned results include an object called <code>img</code> that has a copy of the input frame along with a box around any detected faces. Here we see that the algorithm has detected one face, which is likely the number of faces a human annotator would also have found in the frame.</p>
-<div id="7ae3d02c" class="cell" data-execution_count="12">
+<div id="483fb614" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_face[<span class="st">'img'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -827,7 +828,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The visualization of the detected face is great for a one-off understanding of the algorithm. In order to store this information in a way that we can use for computational analyses, we need to have the location of the detected face represented in a strutured format. This is found in the <code>boxes</code> element of the output, which is designed to be convertable into a pandas data frame. Here is all of the structured information about the face detected in the frame above:</p>
-<div id="3fe5b4cf" class="cell" data-execution_count="13">
+<div id="d15b382c" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(out_face[<span class="st">'boxes'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
@@ -863,7 +864,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>If you followed along with the introductory notebook using movie posters, this is the same information that we used to detect the number of faces present on each poster. One element that makes working with moving images different is that we usually have the same people showing up over and over again across frames and shots. Labeling the identity of the people present in each shot is an essential step in understanding the narrative structure of the material. The distant viewing toolkit (<strong>dvt</strong>) also includes information for doing facial recognition. This requires a bit more care as we need to start by identifying the characters that we want to identify in the first place.</p>
 <p>By default, when we run the face detection algorithm, each detected faces is also assocaited with a sequence of 512 numbers called an <em>embedding</em>. The individual numbers do not have a direct meaning, but are instead defined in a relative way such that if two images of the same person are each associated with an embedding, we would expect the embeddings to be more similar to one another than they are to the embeddings of other faces. As an example, we can see the shape of the embedding object from our example frame above.</p>
-<div id="816d6cb9" class="cell" data-execution_count="14">
+<div id="4f388894" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>out_face[<span class="st">'embed'</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>(1, 512)</code></pre>
@@ -871,7 +872,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>One way to use these embeddings is to first identify portraits of the actors that we are interested in from the video file, and then associate each of these with a character name. Then, we can compute the embeddings of these faces and store them. Finally, each time we detect a face in a frame, we can check how similar the embedding of the detected face is compared to the faces in our reference set. If one of the reference characters is sufficently close, we will assume that we have found the associated character.</p>
 <p>One of the objects that we downloaded in the setup section of this notebook was a folder with portraits of the four main actors from <em>Bewitched</em> named with the name of their character in the show. In the code below we cycle through these images and record the name and embedding of each of the faces. Also, for reference, we store a thumbnail of the actor’s portrait.</p>
-<div id="1a370339" class="cell" data-execution_count="15">
+<div id="9de1e939" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>face_embed <span class="op">=</span> []</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>face_name <span class="op">=</span> []</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>face_img <span class="op">=</span> []</span>
@@ -888,7 +889,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>face_img <span class="op">=</span> np.hstack(face_img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here are the portraits of the characters. They are ordered in alphabetical order: Darrin, Endora, Larry, and Sam.</p>
-<div id="5e948802" class="cell" data-execution_count="16">
+<div id="3852d093" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(face_img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -899,7 +900,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>In order to measure the similarity of two embeddings, we use a mathematical technique called a <em>dot product</em>. This number will be <code>1</code> if two embeddings are exactly the same and <code>-1</code> if they are exactly opposite one another. Typically, two faces that are of different people will have a similar score somewhere close to zero. Let’s start by seeing the similarity scores between the set of four portraits.</p>
-<div id="ec43714f" class="cell" data-execution_count="17">
+<div id="bcb3e89b" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>np.dot(face_embed, face_embed.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>array([[ 1.        ,  0.06135434, -0.19991453,  0.1696034 ],
@@ -912,7 +913,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The first column is Darrin, and then compares Darrin to each of the four images. Since he is the first image, we see <code>.99999</code> because the photo is being compared to itself. Then, image of Darin is compared to Endora (<code>.06135</code>), Larry (<code>-.19993</code>), and Samantha (<code>.16960</code>).</p>
 <p>The values along the diagonal are all 1 (or very close to one) because we are comparing one embedding to itself. All of the other similarity scores are somewhere between <code>-0.2</code> and <code>+.17</code>, which is as expected since each of the portraits shows a unique actor.</p>
 <p>Now, let’s compare these reference faces to the embedding of the individual frame that we started this section with: the middle frame from the third shot showing Samantha in a pink bedroom (<code>img_list[2]</code>).</p>
-<div id="5f58226d" class="cell" data-execution_count="18">
+<div id="2c2ba3a5" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>out_face <span class="op">=</span> anno_face.run(img_list[<span class="dv">2</span>])</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> np.dot(face_embed, out_face[<span class="st">'embed'</span>].T)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>dist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -924,14 +925,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Here we see that there is a much large similarity score (<code>0.59</code>) between this face and the last character in our set. And if we look at the image, we see in fact that this is the same character: Samantha. We can associate the face with the character name algorithmically using the following code.</p>
-<div id="6b9e3749" class="cell" data-execution_count="19">
+<div id="b665774e" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>face_name[np.argmax(dist, axis <span class="op">=</span> <span class="dv">0</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>array(['sam'], dtype='&lt;U6')</code></pre>
 </div>
 </div>
 <p>The code above associates the face with the character that has the highest similarity. It would be a good idea to also store the similarity score and then only trust the relationship if this score is sufficently large, which we can do with the following code.</p>
-<div id="9fa8a65e" class="cell" data-execution_count="20">
+<div id="76d3b8c5" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">max</span>(dist, axis <span class="op">=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>array([0.61289704], dtype=float32)</code></pre>
@@ -942,7 +943,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="building-annotations-from-a-video-file" class="level2">
 <h2 class="anchored" data-anchor-id="building-annotations-from-a-video-file">Building Annotations from a Video File</h2>
 <p>We can combine the techniques above with the <code>yield_video</code> function from <strong>dvt</strong> to identify faces in each of the shots. It’s possible to run the face detection algorithm over every frame, and this has some advantages. For the interest of time and simplicity, we will only use our face detection algorithm on the middle frame of each detected shot.</p>
-<div id="d84ef3a9" class="cell" data-execution_count="21">
+<div id="664c4a16" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> []</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> img, frame, msec <span class="kw">in</span> dvt.yield_video(<span class="st">"data/bewitched_sample.mp4"</span>):</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> frame <span class="kw">in</span> shot[<span class="st">'mid'</span>].values:</span>
@@ -1084,7 +1085,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We now have all of the methods and code needed to identify shots and faces in a moving image file. If we had an entire episode of <em>Bewitched</em>, we could run the exact same sequence of steps above on the full episode without changing anything. The only difference would be that the results would take much longer to finish running. If we had a folder with every episode of the series, we would just need to add one extra layer to our loop to cycle over each video file and make sure to include information about the filename on each row of the output. Finally, if we wanted to extend this to another series, we would just need to add the portraits of any characters that we wish to identify to our folder of reference images.</p>
 <p>We return to the two shows — <em>Bewitched</em> and <em>I Dream of Jeanine</em> — that are central to Chapter 5 of <em>Distant Viewing</em>. The chapter centers around a comparison of the two magical sit-coms, which we can do by putting together shot boundary and then face detection and recognition.</p>
 <p>The full set of video files for the two shows are quite large and the files are under copyright. It also takes a long time to process all of these files, particularly within a free Colab session. Since it is not possible to run the annotations directly on the full set here, we will instead work with the pre-computed annotations that were downloaded during the notebook setup. The structure of the dataset includes one row for each shot, with data about the timing of the shot and the number of faces.</p>
-<div id="c5f97136" class="cell" data-execution_count="22">
+<div id="5e020c46" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>shots <span class="op">=</span> pd.read_csv(<span class="st">"data/ttl_sitcom_shots.csv"</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>shots</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
@@ -1223,7 +1224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>One quick metric that we can compute is the average shot length for each of the two series. This is a commonly used measurement to understand the pacing of a movie or television show. Here we see that Bewitched is slightly faster, with an average shot length of 5.3 seconds compared to the 6.2 seconds of <em>I Dream of Jeannie</em>.</p>
-<div id="daf0e96c" class="cell" data-execution_count="23">
+<div id="346018cc" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>shots.groupby([<span class="st">'series'</span>])[<span class="st">'time'</span>].mean().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="23">
 <pre><code>series
@@ -1233,7 +1234,7 @@ Name: time, dtype: float64</code></pre>
 </div>
 </div>
 <p>A related measurement is the median shot length, which here shows that the median shot length is slightly longer in <em>Bewitched</em> compared to <em>Jeannie</em>. So, while a shot in <em>Bewitched</em> is slightly longer, there may be a set of particularly long shows in <em>Jeannie</em> that causes the average of that show to be longer.</p>
-<div id="c183b800" class="cell" data-execution_count="24">
+<div id="509cc88d" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>shots.groupby([<span class="st">'series'</span>])[<span class="st">'time'</span>].median().sort_values()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>series
@@ -1243,7 +1244,7 @@ Name: time, dtype: float64</code></pre>
 </div>
 </div>
 <p>One of the interesting patterns that we noticed when writting the chapter based on these two series is that the average shot length is closely related to the number of faces present on the screen. We decided to truncate the number of faces to three (so that anything greater than 3 faces becomes 3) given our knowledge of the two shows. Notice how the average shot length increases with the number of faces on screen in both series.</p>
-<div id="1778597f" class="cell" data-execution_count="25">
+<div id="56042466" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>shots.loc[shots[<span class="st">'num_face'</span>] <span class="op">&gt;</span> <span class="dv">3</span>, <span class="st">'num_face'</span>] <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>shots.groupby([<span class="st">'series'</span>, <span class="st">'num_face'</span>])[<span class="st">'time'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
@@ -1261,7 +1262,7 @@ Name: time, dtype: float64</code></pre>
 </div>
 <p>We saw an example of this pattern in our sample video file, where the one shot with two characters was much longer than the shot with a single character. This helps validate that the shot length is related to visual style. At least for these two series, it is related to how often we see a close up on an individual character talking (or acting) versus seeing multiple characters interacting together in a longer shot.</p>
 <p>We also have a dataset that indicates the specific characters detected in shots from the two series. This uses a face detection algorithm similar to the one that we saw used in our sample video file. Here, we have one row for each detected character in a shot. There are four main characters in each of the series.</p>
-<div id="9a604c3a" class="cell" data-execution_count="26">
+<div id="7b6bc642" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>characters <span class="op">=</span> pd.read_csv(<span class="st">"data/ttl_sitcom_characters.csv"</span>)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>characters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
@@ -1376,7 +1377,7 @@ Name: time, dtype: float64</code></pre>
 </div>
 </div>
 <p>We can use the average amount of time that a character is on screen in a given episode as a rough measurement of the character’s visual importance in the show. Here, we compute this metric for each of the characters and sort in descending order within the series.</p>
-<div id="74e3a39a" class="cell" data-execution_count="27">
+<div id="f355e65c" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> characters.groupby([<span class="st">'series'</span>, <span class="st">'video'</span>, <span class="st">'character'</span>])[<span class="st">'time'</span>].agg(<span class="st">'sum'</span>).reset_index()</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> temp.groupby([<span class="st">'series'</span>, <span class="st">'character'</span>])[<span class="st">'time'</span>].agg(<span class="st">'mean'</span>).reset_index()</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>temp[<span class="st">'time'</span>] <span class="op">=</span> temp[<span class="st">'time'</span>] <span class="op">/</span> <span class="dv">60</span></span>

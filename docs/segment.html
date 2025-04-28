@@ -104,6 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script defer="" data-domain="distantviewing.org" src="https://plausible.io/js/script.hash.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -360,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This is a minimal example script showing how to do image segmentation using a set of images that are stored on the same machine where we are running the models. To start, we will load in a few modules that will be needed for the task.</p>
-<div id="bf8d0b78" class="cell" data-execution_count="1">
+<div id="eeaf019f" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os <span class="im">import</span> listdir</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os.path <span class="im">import</span> splitext, join</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
@@ -371,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we load the model that we are interested in using. There are a large number of image segmentation algorithms on HuggingFace; most can be used exactly the same way by simply changing the name of the model in the function calls below.</p>
-<div id="ccfd0834" class="cell" data-execution_count="2">
+<div id="856d8be2" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> pipeline(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"image-segmentation"</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nvidia/segformer-b0-finetuned-ade-512-512"</span></span>
@@ -382,7 +383,7 @@ Device set to use mps:0</code></pre>
 </div>
 </div>
 <p>With the models loaded, the next step is to build a set of paths to the images that we are interested in using. Here, we will create a list of all of the image files in the directory containing the FSA-OWI images. Then, to save time, we take just the first five images to work with. We could run over all of the images or use a different collection by changing the variables below.</p>
-<div id="4e1c5d22" class="cell" data-execution_count="3">
+<div id="85062c1e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>collection <span class="op">=</span> <span class="st">'fsaowi'</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>num_images <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -391,7 +392,7 @@ Device set to use mps:0</code></pre>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> paths[:num_images]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we will load each of the images and run the model over it. For each image, output given by the pipeline is an array of dictionary objects, where each dictionary has a single score, a label, and an image mask. The mask is a black and white image where white represents those pixels associated with the category. We will save both the full output and a summary statistic for each of the images. The full output will be used for visualization below. There are many different kinds of summarization that can be done, including combining with other masks such as the depth estimation. Play around with different options for your task!</p>
-<div id="388c9f88" class="cell" data-execution_count="4">
+<div id="938e2371" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>output_image <span class="op">=</span> {}</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> {<span class="st">'path'</span>: [], <span class="st">'score'</span>: [], <span class="st">'label'</span>: [], <span class="st">'percent'</span>: []}</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> path <span class="kw">in</span> paths:</span>
@@ -408,7 +409,7 @@ Device set to use mps:0</code></pre>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        output[<span class="st">'percent'</span>] <span class="op">+=</span> [np.mean(mask <span class="op">==</span> <span class="dv">255</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can convert the structured outputs that we have produced above into a data frame to save and explore further. Note that this particular model does not have score values, but we include it in the code because other segmentation models do. Unlike many other models, the ordering of the categories are fixed rather than sorted by proportion or probability. So, below we sort by the proportion of the image that is covered by a category.</p>
-<div id="0fef6675" class="cell" data-execution_count="5">
+<div id="ce1fed4e" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> pl.from_dict(output)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> dt.sort(by <span class="op">=</span> [<span class="st">'path'</span>, <span class="st">'percent'</span>], descending <span class="op">=</span> [<span class="va">False</span>, <span class="va">True</span>])</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>dt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -509,7 +510,7 @@ Device set to use mps:0</code></pre>
 </div>
 </div>
 <p>To visualize the output, we can display any of the masks as an image. For example, below we display each of the masks of the images for the label ‘person’. You can replace this with any of the categories that you are interested in looking at. Note that we are only showing those images with at least some pixels equal to the label ‘person’.</p>
-<div id="07f77f6b" class="cell" data-execution_count="6">
+<div id="86ad432d" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> path <span class="kw">in</span> paths:</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    masks <span class="op">=</span> output_image[path]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    mask_person <span class="op">=</span> [x[<span class="st">'mask'</span>] <span class="cf">for</span> x <span class="kw">in</span> masks <span class="cf">if</span> x[<span class="st">'label'</span>] <span class="op">==</span> <span class="st">'person'</span>]</span>
